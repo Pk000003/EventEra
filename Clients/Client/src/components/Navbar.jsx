@@ -1,53 +1,49 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext.jsx";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaTicketAlt,
-  FaBars,
-  FaTimes,
+  FaSearch,
+  FaMapMarkerAlt,
   FaUserCircle,
-  FaSignOutAlt
+  FaChevronDown,
+  FaBars,
+  FaTimes
 } from "react-icons/fa";
-import { motion } from "framer-motion";
+
+import { AuthContext } from "../context/AuthContext.jsx";
 
 
 const Navbar = () => {
 
+
   const { user, logout } = useContext(AuthContext);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [open, setOpen] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const [category, setCategory] = useState(false);
+  const [account, setAccount] = useState(false);
+
 
 
   const handleLogout = () => {
+
     logout();
+
     navigate("/login");
-    setOpen(false);
+
   };
 
-
-  const links = [
-    {
-      name: "Events",
-      path: "/"
-    }
-  ];
 
 
   return (
 
     <nav className="
-      fixed
+      sticky
       top-0
-      w-full
       z-50
-      bg-black/40
-      backdrop-blur-xl
-      border-b
-      border-white/10
-      text-white
+      bg-white
+      shadow-md
     ">
 
 
@@ -75,44 +71,25 @@ const Navbar = () => {
               flex
               items-center
               gap-3
-              text-3xl
-              font-extrabold
+              text-2xl
+              font-bold
+              text-gray-900
             "
           >
 
-            <motion.div
-              whileHover={{
-                rotate:360
-              }}
-              transition={{
-                duration:0.5
-              }}
-              className="
-                p-3
-                rounded-2xl
-                bg-gradient-to-r
-                from-purple-500
-                to-pink-500
-                text-white
-              "
-            >
-
-              <FaTicketAlt size={22}/>
-
-            </motion.div>
-
-
-            <span className="
-              bg-gradient-to-r
-              from-purple-400
-              to-pink-400
-              bg-clip-text
-              text-transparent
+            <div className="
+              bg-purple-600
+              text-white
+              p-3
+              rounded-xl
             ">
 
-              EventEra
+              <FaTicketAlt/>
 
-            </span>
+            </div>
+
+
+            EventEra
 
 
           </Link>
@@ -120,187 +97,302 @@ const Navbar = () => {
 
 
 
-          {/* DESKTOP LINKS */}
+
+          {/* SEARCH */}
+
+
+          <div className="
+            hidden
+            lg:flex
+            items-center
+            bg-gray-100
+            rounded-full
+            px-5
+            py-3
+            w-96
+          ">
+
+
+            <FaSearch className="text-gray-500"/>
+
+
+            <input
+
+              type="text"
+
+              placeholder="Search events..."
+
+              className="
+                bg-transparent
+                outline-none
+                ml-3
+                w-full
+              "
+
+            />
+
+
+          </div>
+
+
+
+
+
+
+          {/* LOCATION */}
 
 
           <div className="
             hidden
             md:flex
             items-center
-            gap-8
+            gap-2
+            text-gray-700
+          ">
+
+            <FaMapMarkerAlt
+              className="text-purple-600"
+            />
+
+            Pune
+
+
+          </div>
+
+
+
+
+
+
+
+          {/* DESKTOP MENU */}
+
+
+          <div className="
+            hidden
+            md:flex
+            items-center
+            gap-6
           ">
 
 
+
+            {/* CATEGORY */}
+
+
+            <div className="relative">
+
+
+              <button
+
+                onClick={()=>setCategory(!category)}
+
+                className="
+                  flex
+                  items-center
+                  gap-2
+                  text-gray-700
+                "
+
+              >
+
+                Categories
+
+                <FaChevronDown size={12}/>
+
+
+              </button>
+
+
+
+
+              {
+                category && (
+
+                  <div className="
+                    absolute
+                    top-10
+                    bg-white
+                    shadow-xl
+                    rounded-xl
+                    p-4
+                    w-40
+                  ">
+
+
+                    <p className="hover:text-purple-600">
+                      Music
+                    </p>
+
+                    <p className="hover:text-purple-600">
+                      Sports
+                    </p>
+
+                    <p className="hover:text-purple-600">
+                      Workshops
+                    </p>
+
+
+                  </div>
+
+                )
+              }
+
+
+
+            </div>
+
+
+
+
+
+            <Link
+              to="/events"
+              className="text-gray-700"
+            >
+
+              Events
+
+            </Link>
+
+
+
+
             {
-              links.map((item)=>(
+              user && (
 
                 <Link
-                  key={item.path}
-                  to={item.path}
-                  className="
-                    relative
-                    text-gray-300
-                    hover:text-white
-                    transition
-                    font-medium
-                  "
+                  to={
+                    user.role==="admin"
+                    ?"/admin"
+                    :"/dashboard"
+                  }
+                  className="text-gray-700"
                 >
 
-                  {item.name}
-
-
-                  {
-                    location.pathname===item.path && (
-
-                      <motion.span
-                        layoutId="active"
-                        className="
-                          absolute
-                          left-0
-                          -bottom-2
-                          h-1
-                          w-full
-                          bg-gradient-to-r
-                          from-purple-500
-                          to-pink-500
-                          rounded-full
-                        "
-                      />
-
-                    )
-                  }
-
+                  Dashboard
 
                 </Link>
 
-              ))
+              )
             }
 
 
 
 
 
+
+            {/* ACCOUNT */}
+
+
+
             {
-              user ? (
+              user ?
 
-                <>
+              (
 
-
-                  <Link
-                    to={
-                      user.role==="admin"
-                      ?"/admin"
-                      :"/dashboard"
-                    }
-                    className="
-                      text-gray-300
-                      hover:text-white
-                    "
-                  >
-
-                    Dashboard
-
-                  </Link>
+              <div className="relative">
 
 
+                <button
 
-                  <div className="
+                  onClick={()=>setAccount(!account)}
+
+                  className="
                     flex
                     items-center
-                    gap-3
-                    bg-white/10
-                    px-4
-                    py-2
-                    rounded-full
-                    border
-                    border-white/10
-                  ">
+                    gap-2
+                  "
+                >
 
+                  <FaUserCircle size={25}/>
 
-                    <FaUserCircle size={22}/>
+                  {user.name}
 
-
-                    <span>
-                      {user.name}
-                    </span>
-
-
-                  </div>
+                </button>
 
 
 
-                  <button
-                    onClick={handleLogout}
-                    className="
-                      flex
-                      items-center
-                      gap-2
-                      bg-red-500/80
-                      hover:bg-red-600
-                      px-5
-                      py-2
-                      rounded-full
-                      transition
-                    "
-                  >
+                {
+                  account && (
 
-                    <FaSignOutAlt/>
-
-                    Logout
-
-                  </button>
+                    <div className="
+                      absolute
+                      right-0
+                      top-12
+                      bg-white
+                      shadow-xl
+                      rounded-xl
+                      p-4
+                      w-40
+                    ">
 
 
-                </>
+                      <button
+                        onClick={handleLogout}
+                        className="
+                          text-red-500
+                        "
+                      >
+
+                        Logout
+
+                      </button>
 
 
-              ) : (
+                    </div>
 
-                <>
-
-
-                  <Link
-                    to="/login"
-                    className="
-                      text-gray-300
-                      hover:text-white
-                    "
-                  >
-
-                    Login
-
-                  </Link>
+                  )
+                }
 
 
-
-                  <Link
-                    to="/register"
-                    className="
-                      bg-gradient-to-r
-                      from-purple-500
-                      to-pink-500
-                      px-6
-                      py-3
-                      rounded-full
-                      font-semibold
-                      hover:scale-105
-                      transition
-                    "
-                  >
-
-                    Get Started
-
-                  </Link>
+              </div>
 
 
-                </>
+              )
+
+              :
+
+              (
+
+              <>
+
+              <Link
+                to="/login"
+                className="text-gray-700"
+              >
+                Login
+              </Link>
+
+
+              <Link
+                to="/register"
+                className="
+                  bg-purple-600
+                  text-white
+                  px-5
+                  py-2
+                  rounded-full
+                "
+              >
+
+                Register
+
+              </Link>
+
+
+              </>
 
               )
 
             }
 
 
+
           </div>
+
+
+
 
 
 
@@ -309,15 +401,18 @@ const Navbar = () => {
 
 
           <button
-            onClick={()=>setOpen(!open)}
+
+            onClick={()=>setMenu(!menu)}
+
             className="
               md:hidden
-              text-3xl
+              text-2xl
             "
+
           >
 
             {
-              open
+              menu
               ?
               <FaTimes/>
               :
@@ -328,115 +423,9 @@ const Navbar = () => {
           </button>
 
 
+
         </div>
 
-
-
-
-
-        {/* MOBILE MENU */}
-
-
-        {
-          open && (
-
-            <motion.div
-
-              initial={{
-                opacity:0,
-                y:-20
-              }}
-
-              animate={{
-                opacity:1,
-                y:0
-              }}
-
-              className="
-                md:hidden
-                pb-6
-                flex
-                flex-col
-                gap-5
-              "
-
-            >
-
-
-              <Link
-                to="/"
-                onClick={()=>setOpen(false)}
-              >
-                Events
-              </Link>
-
-
-              {
-                user ? (
-
-                  <>
-
-                  <Link
-                    to="/dashboard"
-                    onClick={()=>setOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-
-
-                  <button
-                    onClick={handleLogout}
-                    className="
-                      bg-red-500
-                      px-4
-                      py-2
-                      rounded-lg
-                    "
-                  >
-
-                    Logout
-
-                  </button>
-
-
-                  </>
-
-
-                )
-                :
-                (
-
-                  <>
-
-                  <Link to="/login">
-                    Login
-                  </Link>
-
-
-                  <Link
-                    to="/register"
-                    className="
-                      bg-purple-500
-                      px-4
-                      py-2
-                      rounded-lg
-                    "
-                  >
-
-                    Register
-
-                  </Link>
-
-                  </>
-
-                )
-              }
-
-
-            </motion.div>
-
-          )
-        }
 
 
       </div>
