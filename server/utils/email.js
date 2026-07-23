@@ -7,6 +7,7 @@ const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
+    family: 4,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -15,6 +16,7 @@ const transporter = nodemailer.createTransport({
     greetingTimeout: 10000,
     socketTimeout: 10000
 });
+
 
 const sendBookingEmail = async (userEmail, userName, eventTitle) => {
     try {
@@ -30,6 +32,7 @@ const sendBookingEmail = async (userEmail, userName, eventTitle) => {
         };
 
         await transporter.sendMail(mailOptions);
+
         console.log('Email sent successfully to', userEmail);
 
     } catch (error) {
@@ -48,15 +51,26 @@ const sendOTPEmail = async (userEmail, otp, type) => {
             ? 'Please use the following OTP to verify your new EventEra account.'
             : 'Please use the following OTP to verify and confirm your event booking.';
 
+
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: userEmail,
             subject: title,
             html: `
-                <div style="font-family: Arial, sans-serif; text-align:center; padding:20px;">
-                    <h2 style="color:#111;">${title}</h2>
+                <div style="
+                    font-family: Arial, sans-serif;
+                    text-align:center;
+                    padding:20px;
+                ">
 
-                    <p style="color:#555;font-size:16px;">
+                    <h2 style="color:#111;">
+                        ${title}
+                    </h2>
+
+                    <p style="
+                        color:#555;
+                        font-size:16px;
+                    ">
                         ${msg}
                     </p>
 
@@ -72,12 +86,17 @@ const sendOTPEmail = async (userEmail, otp, type) => {
                         ${otp}
                     </div>
 
-                    <p style="color:#999;font-size:12px;">
+                    <p style="
+                        color:#999;
+                        font-size:12px;
+                    ">
                         This code expires in 5 minutes.
                     </p>
+
                 </div>
             `
         };
+
 
         await transporter.sendMail(mailOptions);
 
