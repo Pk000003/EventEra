@@ -1,7 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { FaTicketAlt, FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
+import {
+  FaTicketAlt,
+  FaBars,
+  FaTimes,
+  FaUserCircle,
+  FaSignOutAlt
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 
 
@@ -12,85 +18,165 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
 
   const handleLogout = () => {
     logout();
     navigate("/login");
-    setMenuOpen(false);
+    setOpen(false);
   };
 
 
-  const isActive = (path) => {
-    return location.pathname === path
-      ? "text-white font-semibold"
-      : "text-gray-300 hover:text-white";
-  };
+  const links = [
+    {
+      name: "Events",
+      path: "/"
+    }
+  ];
 
 
   return (
 
     <nav className="
-      sticky top-0 z-50
-      bg-gray-900/90
-      backdrop-blur-md
+      fixed
+      top-0
+      w-full
+      z-50
+      bg-black/40
+      backdrop-blur-xl
+      border-b
+      border-white/10
       text-white
-      shadow-lg
     ">
 
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="
+        max-w-7xl
+        mx-auto
+        px-6
+      ">
 
 
-        <div className="flex justify-between items-center h-20">
+        <div className="
+          h-20
+          flex
+          items-center
+          justify-between
+        ">
 
 
-          {/* Logo */}
+
+          {/* LOGO */}
 
           <Link
             to="/"
-            className="flex items-center gap-3 text-2xl font-bold"
-            aria-label="EventEra Home"
+            className="
+              flex
+              items-center
+              gap-3
+              text-3xl
+              font-extrabold
+            "
           >
 
             <motion.div
-              whileHover={{ rotate: 10 }}
+              whileHover={{
+                rotate:360
+              }}
+              transition={{
+                duration:0.5
+              }}
               className="
-                bg-white
-                text-gray-900
-                p-2
-                rounded-xl
+                p-3
+                rounded-2xl
+                bg-gradient-to-r
+                from-purple-500
+                to-pink-500
+                text-white
               "
             >
 
-              <FaTicketAlt />
+              <FaTicketAlt size={22}/>
 
             </motion.div>
 
 
-            EventEra
+            <span className="
+              bg-gradient-to-r
+              from-purple-400
+              to-pink-400
+              bg-clip-text
+              text-transparent
+            ">
+
+              EventEra
+
+            </span>
+
 
           </Link>
 
 
 
-          {/* Desktop Menu */}
+
+          {/* DESKTOP LINKS */}
+
 
           <div className="
             hidden
             md:flex
             items-center
-            gap-7
+            gap-8
           ">
 
 
-            <Link
-              to="/"
-              className={isActive("/")}
-            >
-              Events
-            </Link>
+            {
+              links.map((item)=>(
+
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="
+                    relative
+                    text-gray-300
+                    hover:text-white
+                    transition
+                    font-medium
+                  "
+                >
+
+                  {item.name}
+
+
+                  {
+                    location.pathname===item.path && (
+
+                      <motion.span
+                        layoutId="active"
+                        className="
+                          absolute
+                          left-0
+                          -bottom-2
+                          h-1
+                          w-full
+                          bg-gradient-to-r
+                          from-purple-500
+                          to-pink-500
+                          rounded-full
+                        "
+                      />
+
+                    )
+                  }
+
+
+                </Link>
+
+              ))
+            }
+
+
 
 
 
@@ -99,17 +185,17 @@ const Navbar = () => {
 
                 <>
 
+
                   <Link
                     to={
-                      user.role === "admin"
-                      ? "/admin"
-                      : "/dashboard"
+                      user.role==="admin"
+                      ?"/admin"
+                      :"/dashboard"
                     }
-                    className={isActive(
-                      user.role === "admin"
-                      ? "/admin"
-                      : "/dashboard"
-                    )}
+                    className="
+                      text-gray-300
+                      hover:text-white
+                    "
                   >
 
                     Dashboard
@@ -117,37 +203,48 @@ const Navbar = () => {
                   </Link>
 
 
+
                   <div className="
                     flex
                     items-center
                     gap-3
-                    bg-gray-800
+                    bg-white/10
                     px-4
                     py-2
-                    rounded-xl
+                    rounded-full
+                    border
+                    border-white/10
                   ">
 
+
                     <FaUserCircle size={22}/>
+
 
                     <span>
                       {user.name}
                     </span>
 
+
                   </div>
+
 
 
                   <button
                     onClick={handleLogout}
                     className="
-                      bg-gray-700
-                      hover:bg-white
-                      hover:text-black
+                      flex
+                      items-center
+                      gap-2
+                      bg-red-500/80
+                      hover:bg-red-600
                       px-5
                       py-2
-                      rounded-lg
+                      rounded-full
                       transition
                     "
                   >
+
+                    <FaSignOutAlt/>
 
                     Logout
 
@@ -164,9 +261,14 @@ const Navbar = () => {
 
                   <Link
                     to="/login"
-                    className={isActive("/login")}
+                    className="
+                      text-gray-300
+                      hover:text-white
+                    "
                   >
+
                     Login
+
                   </Link>
 
 
@@ -174,18 +276,19 @@ const Navbar = () => {
                   <Link
                     to="/register"
                     className="
-                      bg-white
-                      text-gray-900
-                      px-5
-                      py-2
-                      rounded-lg
+                      bg-gradient-to-r
+                      from-purple-500
+                      to-pink-500
+                      px-6
+                      py-3
+                      rounded-full
                       font-semibold
-                      hover:bg-gray-200
+                      hover:scale-105
                       transition
                     "
                   >
 
-                    Sign Up
+                    Get Started
 
                   </Link>
 
@@ -202,49 +305,51 @@ const Navbar = () => {
 
 
 
-          {/* Mobile Button */}
+          {/* MOBILE BUTTON */}
 
 
           <button
+            onClick={()=>setOpen(!open)}
             className="
               md:hidden
-              text-2xl
+              text-3xl
             "
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
           >
 
             {
-              menuOpen
+              open
               ?
               <FaTimes/>
               :
               <FaBars/>
             }
 
-          </button>
 
+          </button>
 
 
         </div>
 
 
 
-        {/* Mobile Menu */}
+
+
+        {/* MOBILE MENU */}
 
 
         {
-          menuOpen && (
+          open && (
 
             <motion.div
+
               initial={{
                 opacity:0,
-                height:0
+                y:-20
               }}
 
               animate={{
                 opacity:1,
-                height:"auto"
+                y:0
               }}
 
               className="
@@ -254,17 +359,16 @@ const Navbar = () => {
                 flex-col
                 gap-5
               "
+
             >
 
 
               <Link
                 to="/"
-                onClick={()=>setMenuOpen(false)}
-                className={isActive("/")}
+                onClick={()=>setOpen(false)}
               >
                 Events
               </Link>
-
 
 
               {
@@ -272,37 +376,27 @@ const Navbar = () => {
 
                   <>
 
-
-                    <Link
-                      to={
-                        user.role==="admin"
-                        ?"/admin"
-                        :"/dashboard"
-                      }
-                      onClick={()=>setMenuOpen(false)}
-                      className="text-gray-300"
-                    >
-
-                      Dashboard
-
-                    </Link>
+                  <Link
+                    to="/dashboard"
+                    onClick={()=>setOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
 
 
+                  <button
+                    onClick={handleLogout}
+                    className="
+                      bg-red-500
+                      px-4
+                      py-2
+                      rounded-lg
+                    "
+                  >
 
-                    <button
-                      onClick={handleLogout}
-                      className="
-                        bg-gray-700
-                        px-5
-                        py-2
-                        rounded-lg
-                        w-fit
-                      "
-                    >
+                    Logout
 
-                      Logout
-
-                    </button>
+                  </button>
 
 
                   </>
@@ -314,37 +408,28 @@ const Navbar = () => {
 
                   <>
 
-
-                    <Link
-                      to="/login"
-                      onClick={()=>setMenuOpen(false)}
-                    >
-                      Login
-                    </Link>
+                  <Link to="/login">
+                    Login
+                  </Link>
 
 
-                    <Link
-                      to="/register"
-                      onClick={()=>setMenuOpen(false)}
-                      className="
-                        bg-white
-                        text-black
-                        px-5
-                        py-2
-                        rounded-lg
-                        w-fit
-                      "
-                    >
+                  <Link
+                    to="/register"
+                    className="
+                      bg-purple-500
+                      px-4
+                      py-2
+                      rounded-lg
+                    "
+                  >
 
-                      Sign Up
+                    Register
 
-                    </Link>
-
+                  </Link>
 
                   </>
 
                 )
-
               }
 
 
@@ -360,6 +445,7 @@ const Navbar = () => {
     </nav>
 
   );
+
 };
 
 
