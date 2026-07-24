@@ -1,10 +1,58 @@
 @import "tailwindcss";
 
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
 
-    background-color: #f9fafb;
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+
+body {
+
+  margin:0;
+
+  font-family:
+  Inter,
+  system-ui,
+  sans-serif;
+
+  background:#f8fafc;
+
+  color:#111827;
+
+  transition:
+  background 0.3s,
+  color 0.3s;
+
+}
+
+
+
+.dark body {
+
+  background:#020617;
+
+  color:white;
+
+}
+
+
+
+* {
+
+  transition:
+  background-color .3s ease,
+  border-color .3s ease,
+  color .3s ease;
+
+}
+.inputStyle{
+@apply w-full px-5 py-4 rounded-xl border border-gray-200 dark:bg-[#220035] dark:border-purple-900 dark:text-white outline-none;
+}
+.input{
+@apply w-full px-4 py-3 border rounded-xl outline-none;
 }

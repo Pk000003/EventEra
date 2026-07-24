@@ -2,25 +2,51 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useNavigate, Link } from "react-router-dom";
 
+import {
+    FaEye,
+    FaEyeSlash,
+    FaTicketAlt,
+    FaUserShield
+} from "react-icons/fa";
+
+import { motion } from "framer-motion";
+
+
+
 const Register = () => {
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [otp, setOtp] = useState("");
 
-    const [showOTP, setShowOTP] = useState(false);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [name,setName] = useState("");
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [otp,setOtp] = useState("");
+
+    const [showOTP,setShowOTP] = useState(false);
+
+    const [showPassword,setShowPassword] = useState(false);
+
+    const [error,setError] = useState("");
+
+    const [loading,setLoading] = useState(false);
 
 
-    const { register, verifyOtp } = useContext(AuthContext);
+
+    const {
+        register,
+        verifyOtp
+    } = useContext(AuthContext);
+
+
 
     const navigate = useNavigate();
 
 
 
-    const handleSubmit = async (e) => {
+
+
+
+    const handleSubmit = async(e)=>{
+
 
         e.preventDefault();
 
@@ -28,16 +54,19 @@ const Register = () => {
         setError("");
 
 
-        try {
+
+        try{
 
 
-            if (!showOTP) {
+            if(!showOTP){
 
 
                 await register({
+
                     name,
                     email,
                     password
+
                 });
 
 
@@ -45,10 +74,15 @@ const Register = () => {
 
 
 
-            } else {
+            }
+            else{
 
 
-                await verifyOtp(email, otp);
+                await verifyOtp(
+                    email,
+                    otp
+                );
+
 
                 navigate("/dashboard");
 
@@ -57,227 +91,1051 @@ const Register = () => {
 
 
 
-        } catch (err) {
-
-
-            console.log(err);
+        }
+        catch(err){
 
 
             setError(
+
                 err.response?.data?.message ||
+
                 err.message ||
+
                 "Something went wrong"
+
             );
 
 
-        } finally {
+        }
+        finally{
+
 
             setLoading(false);
 
+
         }
+
 
     };
 
 
 
 
-    return (
 
-        <div className="max-w-md mx-auto mt-16 bg-white p-8 rounded-xl shadow-xl border">
 
 
-            <div className="text-center mb-8">
 
-                <h2 className="text-3xl font-bold text-gray-900">
-                    Create an Account
-                </h2>
 
 
-                <p className="text-gray-500 mt-2">
-                    Join EventEra today
-                </p>
+return (
 
 
-            </div>
+<div className="
+min-h-screen
 
+flex
+items-center
+justify-center
 
+px-5
+py-16
 
-            {
-                error && (
 
-                    <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-5">
-                        {error}
-                    </div>
+bg-gray-100
 
-                )
-            }
+dark:bg-[#080014]
 
+transition
 
+relative
 
+overflow-hidden
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+">
 
 
 
-                {
-                    !showOTP ? (
 
-                        <>
 
+{/* Glow */}
 
-                            <div>
 
-                                <label className="block mb-2 font-semibold">
-                                    Full Name
-                                </label>
+<div className="
+absolute
 
+w-96
+h-96
 
-                                <input
-                                    type="text"
-                                    required
-                                    value={name}
-                                    onChange={(e)=>setName(e.target.value)}
-                                    className="w-full px-4 py-3 border rounded-lg"
-                                    placeholder="Enter your name"
-                                />
+bg-yellow-400
 
-                            </div>
+dark:bg-purple-600
 
+opacity-20
 
+blur-[150px]
 
+rounded-full
 
-                            <div>
+top-20
 
-                                <label className="block mb-2 font-semibold">
-                                    Email
-                                </label>
+">
 
+</div>
 
-                                <input
-                                    type="email"
-                                    required
-                                    value={email}
-                                    onChange={(e)=>setEmail(e.target.value)}
-                                    className="w-full px-4 py-3 border rounded-lg"
-                                    placeholder="Enter email"
-                                />
 
 
-                            </div>
 
 
 
 
-                            <div>
 
-                                <label className="block mb-2 font-semibold">
-                                    Password
-                                </label>
 
+<motion.div
 
-                                <input
-                                    type="password"
-                                    required
-                                    value={password}
-                                    onChange={(e)=>setPassword(e.target.value)}
-                                    className="w-full px-4 py-3 border rounded-lg"
-                                    placeholder="Enter password"
-                                />
 
+initial={{
+opacity:0,
+y:40
+}}
 
-                            </div>
 
+animate={{
+opacity:1,
+y:0
+}}
 
 
-                        </>
+className="
 
+relative
+z-10
 
-                    ) : (
+w-full
+max-w-md
 
 
-                        <>
+bg-white
 
+dark:bg-[#120021]
 
-                            <div className="bg-green-100 text-green-700 p-3 rounded-lg">
 
-                                OTP sent to your email
+rounded-[35px]
 
-                            </div>
 
+p-8
 
 
-                            <input
-                                type="text"
-                                required
-                                value={otp}
-                                onChange={(e)=>setOtp(e.target.value)}
-                                maxLength="6"
-                                placeholder="Enter OTP"
-                                className="w-full px-4 py-3 border rounded-lg text-center"
-                            />
+shadow-2xl
 
 
-                        </>
+border
 
+border-gray-200
 
-                    )
-                }
+dark:border-purple-900
 
 
+"
 
+>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-gray-900 text-white py-3 rounded-lg font-bold hover:bg-black"
-                >
 
-                    {
-                        loading
-                        ? "Processing..."
-                        : showOTP
-                        ? "Verify OTP"
-                        : "Register"
-                    }
 
 
-                </button>
 
 
 
-            </form>
 
 
+{/* LOGO */}
 
 
-            {
-                !showOTP && (
 
-                    <p className="text-center mt-6">
+<div className="
+text-center
+mb-8
+">
 
-                        Already have an account?
 
+<div className="
+inline-flex
 
-                        <Link
-                            to="/login"
-                            className="font-bold ml-2"
-                        >
-                            Login
-                        </Link>
+items-center
 
+gap-3
 
-                    </p>
 
-                )
-            }
+px-5
 
+py-3
 
 
-        </div>
+rounded-full
 
-    );
+
+bg-yellow-400
+
+
+dark:bg-purple-600
+
+
+text-black
+
+
+dark:text-white
+
+
+font-black
+
+">
+
+
+<FaTicketAlt/>
+
+EventEra
+
+
+</div>
+
+
+
+
+
+
+
+<h1 className="
+mt-6
+
+text-4xl
+
+font-black
+
+
+text-black
+
+dark:text-white
+
+">
+
+
+Create Account
+
+
+</h1>
+
+
+
+
+<p className="
+mt-2
+
+text-gray-500
+
+dark:text-gray-300
+
+">
+
+
+Join thousands of event lovers
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{
+
+error &&
+
+
+<div className="
+
+bg-red-100
+
+dark:bg-red-900/30
+
+
+text-red-600
+
+dark:text-red-300
+
+
+p-4
+
+
+rounded-xl
+
+
+mb-5
+
+
+font-semibold
+
+
+text-center
+
+
+">
+
+{error}
+
+</div>
+
+
+
+}
+
+
+
+
+
+
+
+
+
+<form
+
+onSubmit={handleSubmit}
+
+className="
+space-y-5
+"
+
+
+>
+
+
+
+
+
+
+
+{
+
+!showOTP ?
+
+
+<>
+
+
+
+{/* NAME */}
+
+
+<div>
+
+
+<label className="
+font-bold
+
+text-gray-700
+
+dark:text-gray-200
+
+">
+
+Full Name
+
+</label>
+
+
+
+<input
+
+
+type="text"
+
+required
+
+
+value={name}
+
+
+onChange={(e)=>
+setName(e.target.value)
+}
+
+
+placeholder="Enter your name"
+
+
+className="
+
+w-full
+
+mt-2
+
+px-5
+
+py-4
+
+
+rounded-xl
+
+
+outline-none
+
+
+border
+
+
+border-gray-200
+
+
+dark:border-purple-900
+
+
+bg-gray-100
+
+
+dark:bg-[#220035]
+
+
+text-black
+
+
+dark:text-white
+
+
+"
+
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* EMAIL */}
+
+
+
+<div>
+
+
+<label className="
+font-bold
+
+text-gray-700
+
+dark:text-gray-200
+
+">
+
+Email
+
+</label>
+
+
+
+<input
+
+
+type="email"
+
+required
+
+
+value={email}
+
+
+onChange={(e)=>
+setEmail(e.target.value)
+}
+
+
+placeholder="Enter email"
+
+
+className="
+
+w-full
+
+mt-2
+
+px-5
+
+py-4
+
+
+rounded-xl
+
+
+outline-none
+
+
+border
+
+
+border-gray-200
+
+
+dark:border-purple-900
+
+
+bg-gray-100
+
+
+dark:bg-[#220035]
+
+
+text-black
+
+
+dark:text-white
+
+
+"
+
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* PASSWORD */}
+
+
+
+<div>
+
+
+<label className="
+font-bold
+
+text-gray-700
+
+dark:text-gray-200
+
+">
+
+Password
+
+</label>
+
+
+
+<div className="
+relative
+mt-2
+">
+
+
+<input
+
+
+type={
+showPassword
+
+?
+
+"text"
+
+:
+
+"password"
+
+}
+
+
+required
+
+
+value={password}
+
+
+onChange={(e)=>
+setPassword(e.target.value)
+}
+
+
+placeholder="Create password"
+
+
+className="
+
+w-full
+
+px-5
+
+py-4
+
+pr-12
+
+
+rounded-xl
+
+
+outline-none
+
+
+border
+
+
+border-gray-200
+
+
+dark:border-purple-900
+
+
+bg-gray-100
+
+
+dark:bg-[#220035]
+
+
+text-black
+
+
+dark:text-white
+
+
+"
+
+
+/>
+
+
+
+
+
+<button
+
+
+type="button"
+
+
+onClick={()=>
+setShowPassword(!showPassword)
+}
+
+
+className="
+
+absolute
+
+right-4
+
+top-1/2
+
+-translate-y-1/2
+
+
+text-gray-500
+
+
+dark:text-purple-300
+
+
+"
+
+
+>
+
+
+{
+
+showPassword
+
+?
+
+<FaEyeSlash/>
+
+:
+
+<FaEye/>
+
+}
+
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</>
+
+
+
+:
+
+
+
+
+
+<>
+
+
+<div className="
+
+bg-green-100
+
+dark:bg-green-900/30
+
+
+text-green-700
+
+dark:text-green-300
+
+
+p-4
+
+
+rounded-xl
+
+
+text-center
+
+
+font-bold
+
+
+">
+
+
+OTP sent to your email
+
+
+</div>
+
+
+
+
+
+
+<input
+
+
+type="text"
+
+
+required
+
+
+maxLength="6"
+
+
+value={otp}
+
+
+onChange={(e)=>
+setOtp(e.target.value)
+}
+
+
+placeholder="Enter OTP"
+
+
+className="
+
+w-full
+
+px-5
+
+py-4
+
+
+text-center
+
+
+tracking-[10px]
+
+
+font-black
+
+
+text-xl
+
+
+rounded-xl
+
+
+outline-none
+
+
+border
+
+
+border-gray-200
+
+
+dark:border-purple-900
+
+
+bg-gray-100
+
+
+dark:bg-[#220035]
+
+
+text-black
+
+
+dark:text-white
+
+
+"
+
+
+/>
+
+
+
+</>
+
+
+
+}
+
+
+
+
+
+
+
+
+
+<button
+
+
+disabled={loading}
+
+
+className="
+
+w-full
+
+
+py-4
+
+
+rounded-xl
+
+
+font-black
+
+
+text-lg
+
+
+bg-black
+
+
+text-white
+
+
+dark:bg-purple-600
+
+
+
+hover:scale-105
+
+
+transition
+
+
+shadow-xl
+
+
+disabled:opacity-50
+
+
+"
+
+
+>
+
+
+{
+
+loading
+
+?
+
+"Processing..."
+
+:
+
+showOTP
+
+?
+
+"Verify OTP"
+
+:
+
+"Create Account"
+
+}
+
+
+
+</button>
+
+
+
+
+
+
+
+
+</form>
+
+
+
+
+
+
+
+
+
+<p className="
+text-center
+
+mt-8
+
+
+text-gray-600
+
+
+dark:text-gray-300
+
+">
+
+
+Already have account?
+
+
+<Link
+
+to="/login"
+
+
+className="
+
+ml-2
+
+
+font-black
+
+
+text-yellow-500
+
+
+dark:text-purple-400
+
+
+"
+
+>
+
+
+Login
+
+
+</Link>
+
+
+</p>
+
+
+
+
+
+
+
+
+
+<div className="
+
+mt-6
+
+
+flex
+
+justify-center
+
+gap-2
+
+
+text-sm
+
+
+text-gray-500
+
+
+dark:text-gray-400
+
+
+">
+
+
+<FaUserShield/>
+
+
+Secure EventEra Account
+
+
+</div>
+
+
+
+
+
+
+
+</motion.div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+);
+
 
 };
+
 
 
 export default Register;

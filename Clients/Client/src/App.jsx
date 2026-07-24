@@ -3,18 +3,23 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 
+
 import Home from "./pages/Home";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
 
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
 
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 
+
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailed from "./pages/PaymentFailed";
+
 
 
 
@@ -26,23 +31,45 @@ return (
 <Router>
 
 
-<div className="min-h-screen bg-gray-50">
+<div className="
+min-h-screen
+bg-gray-100
+dark:bg-[#080014]
+transition-colors
+">
 
 
-<Navbar/>
+
+<Navbar />
 
 
-<main className="max-w-7xl mx-auto px-4 py-8">
+
+
+<main className="
+max-w-7xl
+mx-auto
+px-4
+pt-8
+pb-8
+">
+
+
+
 
 
 <Routes>
 
 
 
-<Route 
-path="/" 
+<Route
+
+path="/"
+
 element={<Home/>}
+
 />
+
+
 
 
 
@@ -56,6 +83,8 @@ element={<Events/>}
 
 
 
+
+
 <Route
 
 path="/events/:id"
@@ -63,6 +92,9 @@ path="/events/:id"
 element={<EventDetail/>}
 
 />
+
+
+
 
 
 
@@ -76,6 +108,8 @@ element={<Login/>}
 
 
 
+
+
 <Route
 
 path="/register"
@@ -83,6 +117,8 @@ path="/register"
 element={<Register/>}
 
 />
+
+
 
 
 
@@ -96,6 +132,8 @@ element={<UserDashboard/>}
 
 
 
+
+
 <Route
 
 path="/admin"
@@ -103,6 +141,8 @@ path="/admin"
 element={<AdminDashboard/>}
 
 />
+
+
 
 
 
@@ -116,6 +156,8 @@ element={<PaymentSuccess/>}
 
 
 
+
+
 <Route
 
 path="/payment-failed"
@@ -126,17 +168,46 @@ element={<PaymentFailed/>}
 
 
 
+
+
+
+
 <Route
 
 path="*"
 
 element={
 
-<h1 className="text-center text-4xl font-bold mt-20">
+<div className="
+text-center
+py-20
+">
 
-404 - Page Not Found
+
+<h1 className="
+text-5xl
+font-black
+text-black
+dark:text-white
+">
+
+404
 
 </h1>
+
+
+<p className="
+mt-4
+text-gray-500
+dark:text-gray-300
+">
+
+Page Not Found
+
+</p>
+
+
+</div>
 
 }
 
@@ -144,13 +215,20 @@ element={
 
 
 
+
+
 </Routes>
+
+
+
 
 
 </main>
 
 
+
 </div>
+
 
 
 </Router>

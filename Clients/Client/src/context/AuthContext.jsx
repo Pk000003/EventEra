@@ -1,174 +1,340 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { 
+    createContext, 
+    useState, 
+    useEffect 
+} from "react";
+
 import api from "../utils/axios";
+
 
 export const AuthContext = createContext();
 
 
+
 export const AuthProvider = ({ children }) => {
 
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
+    const [user,setUser] = useState(null);
 
-  useEffect(() => {
-
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-
-    setLoading(false);
-
-  }, []);
-
-
-
-  const register = async (userData) => {
-
-    try {
-
-      const { data } = await api.post(
-        "/auth/register",
-        userData
-      );
-
-      return data;
-
-    } catch (error) {
-
-      console.error(
-        "Register error:",
-        error.response?.data || error.message
-      );
-
-      throw error;
-
-    }
-
-  };
+    const [loading,setLoading] = useState(true);
 
 
 
 
-  const verifyOtp = async (email, otp) => {
 
-    try {
 
-      const { data } = await api.post(
-        "/auth/verify-otp",
-        {
-          email,
-          otp
+    // Load user when app starts
+
+    useEffect(()=>{
+
+
+        const storedUser = localStorage.getItem("user");
+
+
+        const token = localStorage.getItem("token");
+
+
+
+        if(storedUser && token){
+
+
+            setUser(
+                JSON.parse(storedUser)
+            );
+
+
         }
-      );
 
 
-      setUser(data);
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data)
-      );
-
-      localStorage.setItem(
-        "token",
-        data.token
-      );
+        setLoading(false);
 
 
-      return data;
 
-
-    } catch(error) {
-
-      console.error(
-        "OTP error:",
-        error.response?.data || error.message
-      );
-
-      throw error;
-
-    }
-
-  };
+    },[]);
 
 
 
 
-  const login = async (email, password) => {
 
-    try {
 
-      const { data } = await api.post(
-        "/auth/login",
-        {
-          email,
-          password
+
+
+
+    // REGISTER
+
+    const register = async(userData)=>{
+
+
+        try{
+
+
+            const {data} = await api.post(
+
+                "/auth/register",
+
+                userData
+
+            );
+
+
+            return data;
+
+
+
         }
-      );
+        catch(error){
 
 
-      setUser(data);
+            console.log(
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data)
-      );
+                "Register Error:",
 
-      localStorage.setItem(
-        "token",
-        data.token
-      );
+                error.response?.data || error.message
+
+            );
 
 
-      return data;
+            throw error;
 
 
-    } catch(error) {
 
-      console.error(
-        "Login error:",
-        error.response?.data || error.message
-      );
+        }
 
-      throw error;
 
-    }
 
-  };
+    };
 
 
 
 
-  const logout = () => {
-
-    setUser(null);
-
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
-  };
 
 
 
-  return (
 
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        register,
-        login,
-        verifyOtp,
-        logout
-      }}
-    >
 
-      {children}
+    // VERIFY OTP AFTER REGISTER
 
-    </AuthContext.Provider>
+    const verifyOtp = async(email,otp)=>{
 
-  );
+
+        try{
+
+
+            const {data} = await api.post(
+
+                "/auth/verify-otp",
+
+                {
+                    email,
+                    otp
+                }
+
+            );
+
+
+
+
+            setUser(data);
+
+
+
+            localStorage.setItem(
+
+                "user",
+
+                JSON.stringify(data)
+
+            );
+
+
+
+            localStorage.setItem(
+
+                "token",
+
+                data.token
+
+            );
+
+
+
+            return data;
+
+
+
+        }
+        catch(error){
+
+
+            console.log(
+
+                "OTP Verify Error:",
+
+                error.response?.data || error.message
+
+            );
+
+
+
+            throw error;
+
+
+
+        }
+
+
+    };
+
+
+
+
+
+
+
+
+
+    // LOGIN
+
+    const login = async(email,password)=>{
+
+
+        try{
+
+
+            const {data} = await api.post(
+
+                "/auth/login",
+
+                {
+                    email,
+                    password
+                }
+
+            );
+
+
+
+
+            setUser(data);
+
+
+
+            localStorage.setItem(
+
+                "user",
+
+                JSON.stringify(data)
+
+            );
+
+
+
+            localStorage.setItem(
+
+                "token",
+
+                data.token
+
+            );
+
+
+
+            return data;
+
+
+
+        }
+        catch(error){
+
+
+            console.log(
+
+                "Login Error:",
+
+                error.response?.data || error.message
+
+            );
+
+
+            throw error;
+
+
+
+        }
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+    // LOGOUT
+
+    const logout = ()=>{
+
+
+        setUser(null);
+
+
+
+        localStorage.removeItem(
+            "user"
+        );
+
+
+        localStorage.removeItem(
+            "token"
+        );
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+    return (
+
+        <AuthContext.Provider
+
+            value={{
+
+                user,
+
+                loading,
+
+                register,
+
+                login,
+
+                verifyOtp,
+
+                logout
+
+            }}
+
+        >
+
+            {children}
+
+
+        </AuthContext.Provider>
+
+
+    );
+
+
 
 };

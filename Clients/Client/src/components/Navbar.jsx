@@ -1,439 +1,425 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
-  FaTicketAlt,
-  FaSearch,
-  FaMapMarkerAlt,
-  FaUserCircle,
-  FaChevronDown,
-  FaBars,
-  FaTimes
+    FaTicketAlt,
+    FaMoon,
+    FaSun,
+    FaUserCircle
 } from "react-icons/fa";
 
+import { ThemeContext } from "../context/ThemeContext.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
+
 
 
 const Navbar = () => {
 
 
-  const { user, logout } = useContext(AuthContext);
+    const { dark, setDark } = useContext(ThemeContext);
 
-  const navigate = useNavigate();
+    const { user, logout } = useContext(AuthContext);
 
-  const [menu, setMenu] = useState(false);
-  const [category, setCategory] = useState(false);
-  const [account, setAccount] = useState(false);
+    const navigate = useNavigate();
 
 
 
-  const handleLogout = () => {
+    const handleLogout = () => {
 
-    logout();
+        logout();
 
-    navigate("/login");
+        navigate("/login");
 
-  };
+    };
 
 
 
-  return (
+return (
 
-    <nav className="
-      sticky
-      top-0
-      z-50
-      bg-white
-      shadow-md
-    ">
+<nav className="
+w-full
+px-4
+pt-4
+">
 
 
-      <div className="
-        max-w-7xl
-        mx-auto
-        px-6
-      ">
+<div className="
 
+max-w-7xl
+mx-auto
 
-        <div className="
-          h-20
-          flex
-          items-center
-          justify-between
-        ">
+flex
+items-center
+justify-between
 
+px-6
+py-4
 
+rounded-3xl
 
-          {/* LOGO */}
+bg-white/90
+dark:bg-[#140021]/90
 
-          <Link
-            to="/"
-            className="
-              flex
-              items-center
-              gap-3
-              text-2xl
-              font-bold
-              text-gray-900
-            "
-          >
+backdrop-blur-xl
 
-            <div className="
-              bg-purple-600
-              text-white
-              p-3
-              rounded-xl
-            ">
+border
 
-              <FaTicketAlt/>
+border-yellow-300
+dark:border-purple-800
 
-            </div>
+shadow-xl
 
+">
 
-            EventEra
 
 
-          </Link>
 
 
+{/* LOGO */}
 
 
+<Link
 
-          {/* SEARCH */}
+to="/"
 
+className="
+flex
+items-center
+gap-3
+text-2xl
+font-black
+"
 
-          <div className="
-            hidden
-            lg:flex
-            items-center
-            bg-gray-100
-            rounded-full
-            px-5
-            py-3
-            w-96
-          ">
+>
 
 
-            <FaSearch className="text-gray-500"/>
+<div className="
 
+p-3
 
-            <input
+rounded-xl
 
-              type="text"
+bg-yellow-400
 
-              placeholder="Search events..."
+dark:bg-purple-600
 
-              className="
-                bg-transparent
-                outline-none
-                ml-3
-                w-full
-              "
+text-black
 
-            />
+dark:text-white
 
+">
 
-          </div>
+<FaTicketAlt/>
 
+</div>
 
 
 
+<span className="
+text-black
+dark:text-white
+">
 
+EventEra
 
-          {/* LOCATION */}
+</span>
 
 
-          <div className="
-            hidden
-            md:flex
-            items-center
-            gap-2
-            text-gray-700
-          ">
+</Link>
 
-            <FaMapMarkerAlt
-              className="text-purple-600"
-            />
 
-            Pune
 
 
-          </div>
 
 
 
 
+{/* MENU */}
 
 
+<div className="
 
-          {/* DESKTOP MENU */}
+hidden
 
+md:flex
 
-          <div className="
-            hidden
-            md:flex
-            items-center
-            gap-6
-          ">
+items-center
 
+gap-8
 
+">
 
-            {/* CATEGORY */}
 
 
-            <div className="relative">
+<Link
 
+to="/events"
 
-              <button
+className="
+font-semibold
 
-                onClick={()=>setCategory(!category)}
+text-gray-700
 
-                className="
-                  flex
-                  items-center
-                  gap-2
-                  text-gray-700
-                "
+dark:text-gray-200
 
-              >
+hover:text-yellow-500
 
-                Categories
+dark:hover:text-purple-400
 
-                <FaChevronDown size={12}/>
+transition
 
+"
 
-              </button>
+>
 
+Events
 
+</Link>
 
 
-              {
-                category && (
 
-                  <div className="
-                    absolute
-                    top-10
-                    bg-white
-                    shadow-xl
-                    rounded-xl
-                    p-4
-                    w-40
-                  ">
 
 
-                    <p className="hover:text-purple-600">
-                      Music
-                    </p>
 
-                    <p className="hover:text-purple-600">
-                      Sports
-                    </p>
 
-                    <p className="hover:text-purple-600">
-                      Workshops
-                    </p>
+{
 
+user &&
 
-                  </div>
+<Link
 
-                )
-              }
+to={
+user.role==="admin"
+?
+"/admin"
+:
+"/dashboard"
+}
 
+className="
+font-semibold
 
+text-gray-700
 
-            </div>
+dark:text-gray-200
 
+hover:text-yellow-500
 
+dark:hover:text-purple-400
 
+transition
 
+"
 
-            <Link
-              to="/events"
-              className="text-gray-700"
-            >
+>
 
-              Events
+Dashboard
 
-            </Link>
+</Link>
 
 
+}
 
 
-            {
-              user && (
 
-                <Link
-                  to={
-                    user.role==="admin"
-                    ?"/admin"
-                    :"/dashboard"
-                  }
-                  className="text-gray-700"
-                >
 
-                  Dashboard
 
-                </Link>
 
-              )
-            }
 
 
+{
 
+user &&
 
+<div className="
 
+flex
+items-center
+gap-2
 
-            {/* ACCOUNT */}
+px-4
+py-2
 
+rounded-full
 
+bg-gray-100
 
-            {
-              user ?
+dark:bg-[#24003d]
 
-              (
+text-black
 
-              <div className="relative">
+dark:text-white
 
+">
 
-                <button
 
-                  onClick={()=>setAccount(!account)}
+<FaUserCircle/>
 
-                  className="
-                    flex
-                    items-center
-                    gap-2
-                  "
-                >
+<span>
 
-                  <FaUserCircle size={25}/>
+{user.name}
 
-                  {user.name}
+</span>
 
-                </button>
 
+</div>
 
 
-                {
-                  account && (
+}
 
-                    <div className="
-                      absolute
-                      right-0
-                      top-12
-                      bg-white
-                      shadow-xl
-                      rounded-xl
-                      p-4
-                      w-40
-                    ">
 
 
-                      <button
-                        onClick={handleLogout}
-                        className="
-                          text-red-500
-                        "
-                      >
 
-                        Logout
 
-                      </button>
 
 
-                    </div>
 
-                  )
-                }
+{/* THEME BUTTON */}
 
 
-              </div>
+<button
 
+onClick={()=>setDark(!dark)}
 
-              )
+className="
 
-              :
+p-3
 
-              (
+rounded-full
 
-              <>
+bg-yellow-400
 
-              <Link
-                to="/login"
-                className="text-gray-700"
-              >
-                Login
-              </Link>
+dark:bg-purple-600
 
+text-black
 
-              <Link
-                to="/register"
-                className="
-                  bg-purple-600
-                  text-white
-                  px-5
-                  py-2
-                  rounded-full
-                "
-              >
+dark:text-white
 
-                Register
+"
 
-              </Link>
+>
 
 
-              </>
+{
 
-              )
+dark
 
-            }
+?
 
+<FaSun/>
 
+:
 
-          </div>
+<FaMoon/>
 
+}
 
 
+</button>
 
 
 
 
-          {/* MOBILE BUTTON */}
 
 
-          <button
 
-            onClick={()=>setMenu(!menu)}
+{
 
-            className="
-              md:hidden
-              text-2xl
-            "
+user
 
-          >
+?
 
-            {
-              menu
-              ?
-              <FaTimes/>
-              :
-              <FaBars/>
-            }
 
+<button
 
-          </button>
+onClick={handleLogout}
 
+className="
 
+px-5
 
-        </div>
+py-2
 
+rounded-full
 
+font-bold
 
-      </div>
+bg-black
 
+text-white
 
-    </nav>
+dark:bg-purple-600
 
-  );
+dark:text-white
+
+hover:scale-105
+
+transition
+
+"
+
+>
+
+Logout
+
+</button>
+
+
+
+:
+
+
+<Link
+
+to="/login"
+
+className="
+
+px-5
+
+py-2
+
+rounded-full
+
+font-bold
+
+bg-yellow-400
+
+text-black
+
+dark:bg-purple-600
+
+dark:text-white
+
+hover:scale-105
+
+transition
+
+"
+
+>
+
+Login
+
+</Link>
+
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+
+</nav>
+
+
+);
+
 
 };
 

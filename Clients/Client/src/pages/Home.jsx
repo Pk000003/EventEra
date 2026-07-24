@@ -1,101 +1,184 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../utils/axios";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+import api from "../utils/axios";
+
 import {
-    FaCalendarAlt,
-    FaMapMarkerAlt,
     FaSearch,
     FaTicketAlt,
-    FaUsers,
-    FaStar,
+    FaCalendarAlt,
+    FaMapMarkerAlt,
     FaLaptopCode,
     FaMusic,
     FaRunning,
-    FaPalette
+    FaPalette,
+    FaUsers,
+    FaShieldAlt,
+    FaBolt
 } from "react-icons/fa";
+
 
 
 const Home = () => {
 
 
-    const [events,setEvents] = useState([]);
-    const [search,setSearch] = useState("");
-    const [loading,setLoading] = useState(true);
+const navigate = useNavigate();
 
 
+const [events,setEvents] = useState([]);
 
-    useEffect(()=>{
+const [search,setSearch] = useState("");
 
-        const timer=setTimeout(()=>{
-
-            fetchEvents();
-
-        },400);
-
-
-        return ()=>clearTimeout(timer);
-
-
-    },[search]);
-
-
-
-
-
-    const fetchEvents = async()=>{
-
-        try{
-
-            const {data}=await api.get(
-                `/events?search=${search}`
-            );
-
-            setEvents(data);
-
-        }
-        catch(error){
-
-            console.log(error);
-
-        }
-        finally{
-
-            setLoading(false);
-
-        }
-
-    };
+const [loading,setLoading] = useState(true);
 
 
 
 
 
 
-    const categories=[
 
-        {
-            name:"Technology",
-            icon:<FaLaptopCode/>
-        },
+useEffect(()=>{
 
-        {
-            name:"Music",
-            icon:<FaMusic/>
-        },
 
-        {
-            name:"Sports",
-            icon:<FaRunning/>
-        },
+fetchEvents();
 
-        {
-            name:"Art",
-            icon:<FaPalette/>
-        }
 
-    ];
+},[]);
+
+
+
+
+
+
+
+const fetchEvents = async()=>{
+
+
+try{
+
+
+const {data}=await api.get("/events");
+
+
+setEvents(data);
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+finally{
+
+setLoading(false);
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+
+
+const categories=[
+
+
+{
+name:"Technology",
+icon:<FaLaptopCode/>
+},
+
+
+{
+name:"Music",
+icon:<FaMusic/>
+},
+
+
+{
+name:"Sports",
+icon:<FaRunning/>
+},
+
+
+{
+name:"Art",
+icon:<FaPalette/>
+}
+
+
+];
+
+
+
+
+
+
+
+
+
+const features=[
+
+
+{
+icon:<FaBolt/>,
+title:"Fast Booking",
+desc:"Book your favourite events instantly."
+},
+
+
+{
+icon:<FaShieldAlt/>,
+title:"Secure Platform",
+desc:"Safe and reliable experience."
+},
+
+
+{
+icon:<FaUsers/>,
+title:"Community",
+desc:"Connect with thousands of people."
+}
+
+
+];
+
+
+
+
+
+
+
+
+
+
+
+const searchEvents=()=>{
+
+
+navigate(
+
+`/events?search=${search}`
+
+);
+
+
+};
+
+
+
+
 
 
 
@@ -103,126 +186,343 @@ const Home = () => {
 
 return (
 
-<div className="min-h-screen bg-gray-50">
+
+<div className="
+
+min-h-screen
+
+bg-gray-100
+
+dark:bg-[#080014]
+
+transition
+
+">
+
+
+
+
 
 
 
 {/* HERO */}
 
 
-<section className="relative overflow-hidden rounded-3xl bg-black text-white mb-20">
+
+<section className="
+
+relative
+
+overflow-hidden
+
+rounded-[40px]
+
+bg-white
+
+dark:bg-[#120021]
+
+border
+
+border-gray-200
+
+dark:border-purple-900
+
+mb-20
+
+">
 
 
-<div
-className="absolute inset-0 bg-cover bg-center opacity-40"
-style={{
-backgroundImage:
-"url('https://images.unsplash.com/photo-1506157786151-b8491531f063')"
-}}
-></div>
-
-
-<div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black"></div>
 
 
 
-<div className="relative z-10 text-center px-6 py-24 md:py-32">
+<div className="
+
+absolute
+
+w-96
+
+h-96
+
+bg-yellow-400
+
+dark:bg-purple-600
+
+opacity-20
+
+blur-[150px]
+
+rounded-full
+
+">
+
+</div>
 
 
-<motion.h1
 
-initial={{opacity:0,y:40}}
 
-animate={{opacity:1,y:0}}
 
-transition={{duration:0.8}}
 
-className="text-5xl md:text-7xl font-black mb-6"
 
->
+<div className="
+
+relative
+
+z-10
+
+text-center
+
+px-6
+
+py-28
+
+">
+
+
+
+
+
+
+<div className="
+
+inline-flex
+
+items-center
+
+gap-3
+
+px-5
+
+py-3
+
+rounded-full
+
+bg-yellow-400
+
+text-black
+
+dark:bg-purple-600
+
+dark:text-white
+
+font-bold
+
+">
+
+
+<FaTicketAlt/>
+
+EventEra
+
+
+</div>
+
+
+
+
+
+
+
+
+<h1 className="
+
+mt-8
+
+text-5xl
+
+md:text-7xl
+
+font-black
+
+text-black
+
+dark:text-white
+
+">
+
 
 Discover
+
+
 <br/>
 
-<span className="text-blue-400">
+
+<span className="
+
+text-yellow-500
+
+dark:text-purple-400
+
+">
 
 Amazing Events
 
 </span>
 
-</motion.h1>
+
+</h1>
 
 
 
-<p className="text-gray-300 text-lg max-w-2xl mx-auto mb-10">
 
-Find concerts, technology events, workshops and unforgettable experiences near you.
+
+
+
+<p className="
+
+mt-6
+
+text-lg
+
+text-gray-600
+
+dark:text-gray-300
+
+max-w-2xl
+
+mx-auto
+
+">
+
+
+Find concerts, workshops, sports and unforgettable experiences near you.
+
 
 </p>
 
 
 
 
-<div className="max-w-2xl mx-auto relative">
 
 
-<FaSearch className="absolute left-6 top-5 text-gray-400"/>
+
+
+
+<div className="
+
+mt-10
+
+max-w-3xl
+
+mx-auto
+
+flex
+
+items-center
+
+rounded-full
+
+bg-gray-100
+
+dark:bg-[#220035]
+
+p-2
+
+">
+
+
+
+<FaSearch className="ml-5 text-gray-500"/>
+
+
+
 
 
 <input
 
+
 value={search}
+
 
 onChange={(e)=>setSearch(e.target.value)}
 
+
 placeholder="Search events..."
 
-className="w-full py-5 pl-14 pr-6 rounded-full text-black text-lg outline-none"
+
+className="
+
+flex-1
+
+px-5
+
+py-4
+
+outline-none
+
+bg-transparent
+
+text-black
+
+dark:text-white
+
+placeholder:text-gray-500
+
+"
+
 
 />
 
 
-</div>
 
 
 
-<div className="flex justify-center gap-5 mt-10">
+<button
 
 
-<Link
+onClick={searchEvents}
 
-to="/"
 
-className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-full font-bold"
+className="
+
+px-7
+
+py-3
+
+rounded-full
+
+font-bold
+
+bg-yellow-400
+
+text-black
+
+dark:bg-purple-600
+
+dark:text-white
+
+"
+
 
 >
 
-Explore Events
 
-</Link>
-
+Search
 
 
-<Link
+</button>
 
-to="/register"
 
-className="border border-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-black transition"
 
->
-
-Host Event
-
-</Link>
 
 
 </div>
 
 
+
+
+
+
 </div>
+
 
 
 </section>
+
+
+
+
+
+
 
 
 
@@ -233,56 +533,169 @@ Host Event
 {/* CATEGORIES */}
 
 
+
 <section className="mb-20">
 
 
-<h2 className="text-3xl font-bold mb-8">
+
+<h2 className="
+
+text-4xl
+
+font-black
+
+mb-10
+
+text-black
+
+dark:text-white
+
+">
+
 
 Explore Categories
+
 
 </h2>
 
 
-<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+
+
+
+
+<div className="
+
+grid
+
+grid-cols-2
+
+md:grid-cols-4
+
+gap-6
+
+">
+
 
 
 {
+
 categories.map((cat,index)=>(
 
 
 <motion.div
 
-whileHover={{scale:1.05}}
 
 key={index}
 
-className="bg-white p-8 rounded-2xl shadow hover:shadow-xl flex flex-col items-center gap-4"
+
+whileHover={{
+
+scale:1.05,
+
+y:-8
+
+}}
+
+
+onClick={()=>navigate(
+
+`/events?category=${cat.name}`
+
+)}
+
+
+className="
+
+cursor-pointer
+
+bg-white
+
+dark:bg-[#17002b]
+
+p-8
+
+rounded-3xl
+
+text-center
+
+shadow-xl
+
+border
+
+border-gray-200
+
+dark:border-purple-900
+
+transition
+
+"
+
 
 >
 
 
-<div className="text-4xl text-blue-500">
+
+<div className="
+
+text-5xl
+
+flex
+
+justify-center
+
+text-yellow-500
+
+dark:text-purple-400
+
+mb-5
+
+">
+
 
 {cat.icon}
+
 
 </div>
 
 
-<h3 className="font-bold">
+
+
+
+
+
+<h3 className="
+
+font-bold
+
+text-black
+
+dark:text-white
+
+">
+
 
 {cat.name}
 
+
 </h3>
+
 
 
 </motion.div>
 
 
+
 ))
+
+
 }
 
 
+
 </div>
+
+
 
 
 </section>
@@ -291,56 +704,6 @@ className="bg-white p-8 rounded-2xl shadow hover:shadow-xl flex flex-col items-c
 
 
 
-
-
-
-{/* STATS */}
-
-
-<section className="grid md:grid-cols-3 gap-6 mb-20">
-
-
-{
-
-[
-["10K+","Events"],
-["50K+","Users"],
-["500+","Organizers"]
-].map((item,index)=>(
-
-
-<div
-
-key={index}
-
-className="bg-white rounded-2xl p-8 text-center shadow"
-
->
-
-<h2 className="text-4xl font-black text-blue-500">
-
-{item[0]}
-
-</h2>
-
-
-<p className="text-gray-500 mt-2">
-
-{item[1]}
-
-</p>
-
-
-</div>
-
-
-))
-
-
-}
-
-
-</section>
 
 
 
@@ -356,24 +719,63 @@ className="bg-white rounded-2xl p-8 text-center shadow"
 <section>
 
 
-<div className="flex justify-between items-center mb-8">
+<div className="
+
+flex
+
+justify-between
+
+items-center
+
+mb-8
+
+">
 
 
-<h2 className="text-3xl font-bold">
+<h2 className="
+
+text-4xl
+
+font-black
+
+text-black
+
+dark:text-white
+
+">
 
 Upcoming Events
 
 </h2>
 
 
-<p className="text-gray-500">
 
-{events.length} events
+<Link
 
-</p>
+to="/events"
+
+className="
+
+font-bold
+
+text-yellow-500
+
+dark:text-purple-400
+
+"
+
+>
+
+View All
+
+</Link>
 
 
 </div>
+
+
+
+
 
 
 
@@ -383,74 +785,100 @@ Upcoming Events
 
 loading ?
 
-(
 
 <div className="text-center py-20">
 
-Loading events...
+Loading...
 
 </div>
 
-)
-
-
-:
-
-events.length===0 ?
-
-(
-
-<div className="text-center py-20 text-gray-500">
-
-No events found
-
-</div>
-
-)
 
 
 :
 
 
-<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div className="
+
+grid
+
+md:grid-cols-2
+
+lg:grid-cols-3
+
+gap-8
+
+">
 
 
 {
 
-events.map(event=>(
+events.slice(0,6).map(event=>(
+
 
 
 <motion.div
 
-whileHover={{y:-8}}
 
 key={event._id}
 
-className="bg-white rounded-3xl overflow-hidden shadow hover:shadow-2xl transition"
+
+whileHover={{
+
+y:-10
+
+}}
+
+
+className="
+
+bg-white
+
+dark:bg-[#17002b]
+
+rounded-3xl
+
+overflow-hidden
+
+shadow-xl
+
+border
+
+dark:border-purple-900
+
+"
 
 >
 
 
-<div className="h-52 relative">
 
 
 <img
 
-src={event.image || "https://images.unsplash.com/photo-1492684223066-81342ee5ff30"}
 
-className="w-full h-full object-cover"
+src={
+
+event.image ||
+
+"https://images.unsplash.com/photo-1492684223066-81342ee5ff30"
+
+}
+
+
+className="
+
+w-full
+
+h-52
+
+object-cover
+
+"
+
 
 />
 
 
-<span className="absolute top-4 left-4 bg-blue-500 text-white px-4 py-1 rounded-full text-sm">
 
-Trending
-
-</span>
-
-
-</div>
 
 
 
@@ -458,18 +886,42 @@ Trending
 <div className="p-6">
 
 
-<h3 className="text-xl font-bold mb-3">
+
+<h3 className="
+
+text-xl
+
+font-bold
+
+dark:text-white
+
+">
+
 
 {event.title}
+
 
 </h3>
 
 
 
-<div className="space-y-2 text-gray-600 text-sm">
 
 
-<p className="flex gap-2">
+
+
+<p className="
+
+mt-3
+
+flex
+
+gap-3
+
+text-gray-500
+
+dark:text-gray-300
+
+">
 
 <FaCalendarAlt/>
 
@@ -479,7 +931,22 @@ Trending
 
 
 
-<p className="flex gap-2">
+
+
+
+<p className="
+
+mt-2
+
+flex
+
+gap-3
+
+text-gray-500
+
+dark:text-gray-300
+
+">
 
 <FaMapMarkerAlt/>
 
@@ -489,38 +956,53 @@ Trending
 
 
 
-</div>
 
-
-
-<div className="flex justify-between items-center mt-6">
-
-
-<span className="font-bold text-blue-600">
-
-₹{event.ticketPrice}
-
-</span>
 
 
 
 <Link
 
+
 to={`/events/${event._id}`}
 
-className="bg-black text-white px-5 py-2 rounded-xl"
+
+className="
+
+block
+
+mt-6
+
+text-center
+
+py-3
+
+rounded-xl
+
+font-bold
+
+bg-yellow-400
+
+text-black
+
+dark:bg-purple-600
+
+dark:text-white
+
+"
+
 
 >
 
-View
+View Details
 
 </Link>
 
 
+
 </div>
 
 
-</div>
+
 
 
 </motion.div>
@@ -535,7 +1017,9 @@ View
 </div>
 
 
+
 }
+
 
 
 </section>
@@ -545,16 +1029,181 @@ View
 
 
 
-<footer className="mt-20 py-10 text-center border-t">
 
 
-<div className="flex justify-center items-center gap-2 font-bold text-xl">
+
+
+
+
+
+{/* FEATURES */}
+
+
+
+<section className="
+
+grid
+
+md:grid-cols-3
+
+gap-8
+
+my-24
+
+">
+
+
+{
+
+features.map((item,index)=>(
+
+
+<div
+
+key={index}
+
+className="
+
+bg-white
+
+dark:bg-[#17002b]
+
+rounded-3xl
+
+p-8
+
+text-center
+
+border
+
+dark:border-purple-900
+
+"
+
+
+>
+
+
+<div className="
+
+text-4xl
+
+flex
+
+justify-center
+
+text-yellow-500
+
+dark:text-purple-400
+
+">
+
+
+{item.icon}
+
+
+</div>
+
+
+
+
+
+<h3 className="
+
+text-xl
+
+font-bold
+
+mt-5
+
+dark:text-white
+
+">
+
+{item.title}
+
+</h3>
+
+
+
+
+
+<p className="
+
+mt-3
+
+text-gray-500
+
+dark:text-gray-300
+
+">
+
+{item.desc}
+
+</p>
+
+
+
+</div>
+
+
+
+))
+
+
+}
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<footer className="
+
+border-t
+
+dark:border-purple-900
+
+py-10
+
+text-center
+
+">
+
+
+<div className="
+
+flex
+
+justify-center
+
+gap-3
+
+font-black
+
+text-2xl
+
+dark:text-white
+
+">
+
 
 <FaTicketAlt/>
 
 EventEra
 
+
 </div>
+
 
 
 <p className="text-gray-500 mt-3">
@@ -564,7 +1213,12 @@ Discover. Connect. Experience.
 </p>
 
 
+
 </footer>
+
+
+
+
 
 
 
@@ -575,6 +1229,7 @@ Discover. Connect. Experience.
 
 
 };
+
 
 
 export default Home;
