@@ -1,32 +1,13 @@
-const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
+const { BrevoClient } = require("@getbrevo/brevo");
+require("dotenv").config();
 
-dotenv.config();
 
-const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.BREVO_USER,
-        pass: process.env.BREVO_PASS
-    },
-    tls: {
-        rejectUnauthorized: false
-    }
-});
-
-transporter.verify((error, success) => {
-    if(error){
-        console.log("SMTP FAILED", error);
-    }
-    else{
-        console.log("SMTP WORKING");
-    }
+const client = new BrevoClient({
+    apiKey: process.env.BREVO_API_KEY
 });
 
 
-
+// ================= BOOKING EMAIL =================
 
 const sendBookingEmail = async (
     userEmail,
@@ -36,76 +17,65 @@ const sendBookingEmail = async (
 
     try {
 
-        const mailOptions = {
+        await client.transactionalEmails.sendTransacEmail({
 
-            from: process.env.EMAIL_USER,
+            sender: {
+                name: "EventEra",
+                email: process.env.EMAIL_USER
+            },
 
-            to: userEmail,
+            to: [
+                {
+                    email: userEmail,
+                    name: userName
+                }
+            ],
 
             subject: `Booking Confirmed: ${eventTitle}`,
 
-            html: `
+            htmlContent: `
+                <h2>Hi ${userName}!</h2>
 
-                <div style="font-family:Arial;padding:20px">
+                <p>
+                    Your booking for 
+                    <strong>${eventTitle}</strong>
+                    is confirmed.
+                </p>
 
-                    <h2>
-                        Hi ${userName}!
-                    </h2>
-
-                    <p>
-                        Your booking for 
-                        <strong>${eventTitle}</strong>
-                        is successfully confirmed.
-                    </p>
-
-                    <p>
-                        Thank you for choosing EventEra.
-                    </p>
-
-                </div>
-
+                <p>
+                    Thank you for choosing EventEra.
+                </p>
             `
-
-        };
-
-
-        await transporter.sendMail(mailOptions);
+        });
 
 
         console.log(
-            "Booking email sent successfully to",
+            "Booking email sent to",
             userEmail
         );
 
 
-    } catch(error) {
-
+    } catch(error){
 
         console.error(
             "BOOKING EMAIL ERROR:",
-            error
+            error.message
         );
 
-
         throw error;
-
     }
-
 };
 
 
 
 
-
-
-
+// ================= OTP EMAIL =================
 
 const sendOTPEmail = async (
     userEmail,
     otp,
     type
 ) => {
-
 
     try {
 
@@ -117,113 +87,76 @@ const sendOTPEmail = async (
 
 
 
-        const msg =
-            type === "account_verification"
-            ? "Please use the following OTP to verify your new EventEra account."
-            : "Please use the following OTP to verify and confirm your event booking.";
+        await client.transactionalEmails.sendTransacEmail({
+
+            sender: {
+                name: "EventEra",
+                email: process.env.EMAIL_USER
+            },
 
 
-
-
-
-        const mailOptions = {
-
-
-            from: process.env.EMAIL_USER,
-
-
-            to: userEmail,
+            to: [
+                {
+                    email: userEmail
+                }
+            ],
 
 
             subject: title,
 
 
-            html: `
-
-            <div style="
-                font-family:Arial;
-                text-align:center;
-                padding:20px;
-            ">
-
-
-                <h2>
-                    ${title}
-                </h2>
-
-
-                <p>
-                    ${msg}
-                </p>
-
+            htmlContent: `
 
                 <div style="
-                    margin:20px auto;
-                    padding:15px;
-                    font-size:28px;
-                    font-weight:bold;
-                    background:#f4f4f4;
-                    width:max-content;
-                    letter-spacing:8px;
+                    font-family:Arial;
+                    text-align:center;
+                    padding:20px;
                 ">
 
-                    ${otp}
+                    <h2>${title}</h2>
+
+
+                    <p>
+                        Your OTP is:
+                    </p>
+
+
+                    <h1>
+                        ${otp}
+                    </h1>
+
+
+                    <p>
+                        This OTP expires in 5 minutes.
+                    </p>
 
                 </div>
 
-
-                <p style="color:#999;font-size:12px">
-
-                    This OTP expires in 5 minutes.
-
-                </p>
-
-
-            </div>
-
             `
-
-        };
-
-
-
-
-        await transporter.sendMail(mailOptions);
-
+        });
 
 
         console.log(
-            `OTP sent to ${userEmail} for ${type}`
+            "OTP sent successfully to",
+            userEmail
         );
 
 
-
-    } catch(error) {
-
-
+    } catch(error){
 
         console.error(
             "OTP EMAIL ERROR:",
-            error
+            error.message
         );
 
-
         throw error;
-
-
     }
-
 
 };
 
 
 
-
-
 module.exports = {
-
     sendBookingEmail,
-
     sendOTPEmail
-
 };
