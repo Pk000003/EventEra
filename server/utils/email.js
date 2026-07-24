@@ -5,42 +5,13 @@ dotenv.config();
 
 
 const transporter = nodemailer.createTransport({
-
-    host: "smtp.gmail.com",
-
+    host: "smtp-relay.brevo.com",
     port: 587,
-
     secure: false,
-
-    family: 4,
-
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-
-    tls: {
-        rejectUnauthorized: false
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_PASS
     }
-
-});
-
-
-
-// Check SMTP connection
-
-transporter.verify((error) => {
-
-    if (error) {
-
-        console.error("SMTP Error:", error);
-
-    } else {
-
-        console.log("SMTP Server Ready");
-
-    }
-
 });
 
 
