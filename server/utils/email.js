@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-
 const transporter = nodemailer.createTransport({
     host: "smtp-relay.brevo.com",
     port: 587,
@@ -11,9 +10,20 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.BREVO_USER,
         pass: process.env.BREVO_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
     }
 });
 
+transporter.verify((error, success) => {
+    if(error){
+        console.log("SMTP FAILED", error);
+    }
+    else{
+        console.log("SMTP WORKING");
+    }
+});
 
 
 
