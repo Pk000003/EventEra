@@ -13,8 +13,10 @@ exports.sendBookingOTP = async (req, res) => {
         await sendOTPEmail(req.user.email, otp, 'event_booking');
         res.json({ message: 'OTP sent successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error sending OTP', error: error.message });
-    }
+    console.error("FULL EMAIL ERROR:");
+    console.error(error);
+    throw error;
+}
 };
 
 exports.bookEvent = async (req, res) => {

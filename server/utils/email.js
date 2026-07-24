@@ -4,17 +4,18 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    family: 4,
-    dnsTimeout: 10000,
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 20000,
+    service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    }
+});
+
+transporter.verify((error, success) => {
+    if (error) {
+        console.error("SMTP Error:", error);
+    } else {
+        console.log("SMTP Server Ready");
     }
 });
 
@@ -37,8 +38,10 @@ const sendBookingEmail = async (userEmail, userName, eventTitle) => {
         console.log('Email sent successfully to', userEmail);
 
     } catch (error) {
-        console.error('Error sending email:', error.message);
-    }
+    console.error("FULL EMAIL ERROR:");
+    console.error(error);
+    throw error;
+}
 };
 
 
