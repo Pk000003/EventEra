@@ -1,175 +1,395 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
-const User = require('./models/User');
-const Event = require('./models/Event');
-const Booking = require('./models/Booking');
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const bcrypt = require("bcryptjs");
+
+const User = require("./models/User");
+const Event = require("./models/Event");
+const Booking = require("./models/Booking");
 
 dotenv.config();
 
+
+
 const users = [
-    { name: 'Admin User', email: 'admin@eventora.com', password: 'password123', role: 'admin' },
-    { name: 'Demo User', email: 'user@eventora.com', password: 'password123', role: 'user' },
-    { name: 'Alice Smith', email: 'alice@eventora.com', password: 'password123', role: 'user' },
-    { name: 'Bob Johnson', email: 'bob@eventora.com', password: 'password123', role: 'user' },
-    { name: 'Charlie Dave', email: 'charlie@eventora.com', password: 'password123', role: 'user' },
-    { name: 'Diana Prince', email: 'diana@eventora.com', password: 'password123', role: 'user' },
-    { name: 'Ethan Hunt', email: 'ethan@eventora.com', password: 'password123', role: 'user' },
-    { name: 'Fiona Gallagher', email: 'fiona@eventora.com', password: 'password123', role: 'user' },
-    { name: 'George Miller', email: 'george@eventora.com', password: 'password123', role: 'user' },
-    { name: 'Hannah Montana', email: 'hannah@eventora.com', password: 'password123', role: 'user' }
+    {
+        name: "Admin User",
+        email: "admin@eventora.com",
+        password: "password123",
+        role: "admin"
+    },
+    {
+        name: "Demo User",
+        email: "user@eventora.com",
+        password: "password123",
+        role: "user"
+    }
 ];
+
+
 
 const events = [
-    {
-        title: 'React & Node.js Developer Retreat',
-        description: 'Join us for a 3-day deep dive into modern full-stack web development. Perfect for developers looking to take their skills to the next level.',
-        date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
-        location: 'Silicon Valley Innovation Center, CA',
-        category: 'Technology',
-        totalSeats: 200,
-        ticketPrice: 0,
-        image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        title: 'Neon Nights EDM Festival',
-        description: 'Experience an unforgettable night of EDM, techno, and dazzling light shows with top DJs from around the globe.',
-        date: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000), // 20 days from now
-        location: 'Grand Arena, New York',
-        category: 'Music',
-        totalSeats: 500,
-        ticketPrice: 1500,
-        image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        title: 'Global Leaders Business Summit',
-        description: 'A premium gathering of CEOs, founders, and investors discussing the future of global commerce and AI integration.',
-        date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
-        location: 'The Ritz-Carlton, London',
-        category: 'Business',
-        totalSeats: 150,
-        ticketPrice: 5000,
-        image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        title: 'Modern Art Expo 2024',
-        description: 'Discover breathtaking contemporary and modern arts from underground and trending artists this season.',
-        date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
-        location: 'Downtown Art Museum',
-        category: 'Art',
-        totalSeats: 300,
-        ticketPrice: 200,
-        image: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        title: 'Startup Pitch & Pitch Competition',
-        description: 'Watch 25 startups pitch for 1 million dollars in seed funding. Great networking for entrepreneurs and angel investors.',
-        date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-        location: 'Convention Center, Miami',
-        category: 'Business',
-        totalSeats: 250,
-        ticketPrice: 100,
-        image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        title: 'Cloud Computing Architecture Seminar',
-        description: 'A purely technical breakdown of scalable cloud solutions, multi-region routing, and serverless compute processing.',
-        date: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
-        location: 'Tech Hub, Seattle',
-        category: 'Technology',
-        totalSeats: 100,
-        ticketPrice: 600,
-        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800'
-    }
+
+{
+title:"Sunburn Music Festival Goa",
+description:"Asia's biggest EDM festival featuring international DJs, music and nightlife.",
+category:"Music",
+date:"2026-12-28",
+location:"Vagator Beach, Goa",
+ticketPrice:2999,
+totalSeats:5000,
+image:"https://images.unsplash.com/photo-1506157786151-b8491531f063"
+},
+
+
+{
+title:"Ganesh Chaturthi Celebration",
+description:"Mumbai's famous Ganpati celebration with cultural programs.",
+category:"Festival",
+date:"2026-09-05",
+location:"Mumbai Maharashtra",
+ticketPrice:299,
+totalSeats:10000,
+image:"https://images.unsplash.com/photo-1591604466107-ec97de577aff"
+},
+
+
+{
+title:"Navratri Garba Night",
+description:"Traditional Gujarati Garba with music and dance.",
+category:"Festival",
+date:"2026-10-15",
+location:"Ahmedabad Gujarat",
+ticketPrice:999,
+totalSeats:3000,
+image:"https://images.unsplash.com/photo-1604503468506-a8da13d82791"
+},
+
+
+{
+title:"Diwali Lights Festival",
+description:"Celebrate Diwali with lights, food and cultural shows.",
+category:"Festival",
+date:"2026-11-08",
+location:"Jaipur Rajasthan",
+ticketPrice:499,
+totalSeats:5000,
+image:"https://images.unsplash.com/photo-1605649487212-47bdab064df7"
+},
+
+
+{
+title:"Holi Color Festival",
+description:"Biggest Holi celebration with music and colors.",
+category:"Festival",
+date:"2027-03-12",
+location:"Vrindavan Uttar Pradesh",
+ticketPrice:799,
+totalSeats:4000,
+image:"https://images.unsplash.com/photo-1581299894007-aaa50297cf16"
+},
+
+
+{
+title:"IPL Cricket Fan Experience",
+description:"Live cricket experience with fan zones.",
+category:"Sports",
+date:"2026-04-10",
+location:"Mumbai",
+ticketPrice:1499,
+totalSeats:2000,
+image:"https://images.unsplash.com/photo-1540747913346-19e32dc3e97e"
+},
+
+
+{
+title:"Pune Marathon 2026",
+description:"Fitness marathon for runners.",
+category:"Sports",
+date:"2026-12-20",
+location:"Pune",
+ticketPrice:499,
+totalSeats:8000,
+image:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5"
+},
+
+
+{
+title:"ISRO Space Expo",
+description:"Explore India's space missions and technology.",
+category:"Technology",
+date:"2026-08-20",
+location:"Bangalore",
+ticketPrice:299,
+totalSeats:1500,
+image:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa"
+},
+
+
+{
+title:"AI Machine Learning Summit India",
+description:"Conference for AI developers and technology enthusiasts.",
+category:"Technology",
+date:"2026-09-25",
+location:"Hyderabad",
+ticketPrice:1999,
+totalSeats:1000,
+image:"https://images.unsplash.com/photo-1518770660439-4636190af475"
+},
+
+
+{
+title:"Startup India Meetup",
+description:"Meet entrepreneurs, founders and investors.",
+category:"Business",
+date:"2026-10-12",
+location:"Bangalore",
+ticketPrice:999,
+totalSeats:500,
+image:"https://images.unsplash.com/photo-1556761175-b413da4baf72"
+},
+
+
+{
+title:"NH7 Weekender",
+description:"India's popular multi genre music festival.",
+category:"Music",
+date:"2026-12-05",
+location:"Pune",
+ticketPrice:1999,
+totalSeats:6000,
+image:"https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b"
+},
+
+
+{
+title:"Durga Puja Cultural Festival",
+description:"Kolkata's grand cultural celebration.",
+category:"Festival",
+date:"2026-10-18",
+location:"Kolkata",
+ticketPrice:399,
+totalSeats:7000,
+image:"https://images.unsplash.com/photo-1577083552431-6e5fd01988c5"
+},
+
+
+{
+title:"Rajasthan Folk Art Festival",
+description:"Traditional music and dance performances.",
+category:"Art",
+date:"2026-11-20",
+location:"Udaipur",
+ticketPrice:799,
+totalSeats:2000,
+image:"https://images.unsplash.com/photo-1518005020951-eccb494ad742"
+},
+
+
+{
+title:"Photography Workshop Mumbai",
+description:"Learn photography from professionals.",
+category:"Art",
+date:"2026-09-14",
+location:"Mumbai",
+ticketPrice:499,
+totalSeats:100,
+image:"https://images.unsplash.com/photo-1452780212940-6f5c0d14d848"
+},
+
+
+{
+title:"TEDx Pune",
+description:"Inspiring talks from speakers.",
+category:"Education",
+date:"2026-11-30",
+location:"Pune",
+ticketPrice:1499,
+totalSeats:800,
+image:"https://images.unsplash.com/photo-1475721027785-f74eccf877e2"
+},
+
+
+{
+title:"Food Festival India",
+description:"Taste India's best cuisines.",
+category:"Food",
+date:"2026-12-15",
+location:"Delhi",
+ticketPrice:299,
+totalSeats:5000,
+image:"https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+},
+
+
+{
+title:"College Cultural Fest",
+description:"Music, dance and competitions.",
+category:"College",
+date:"2026-02-15",
+location:"Pune",
+ticketPrice:199,
+totalSeats:3000,
+image:"https://images.unsplash.com/photo-1527529482837-4698179dc6ce"
+},
+
+
+{
+title:"Mumbai Street Art Festival",
+description:"Graffiti and street creativity festival.",
+category:"Art",
+date:"2026-12-22",
+location:"Mumbai",
+ticketPrice:399,
+totalSeats:1000,
+image:"https://images.unsplash.com/photo-1549490349-8643362247b5"
+},
+
+
+{
+title:"Yoga Wellness Retreat",
+description:"Yoga meditation and wellness sessions.",
+category:"Health",
+date:"2026-08-30",
+location:"Rishikesh",
+ticketPrice:1999,
+totalSeats:500,
+image:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b"
+},
+
+
+{
+title:"Himalayan Adventure Trek",
+description:"Thrilling trekking experience.",
+category:"Adventure",
+date:"2026-06-10",
+location:"Manali",
+ticketPrice:4999,
+totalSeats:300,
+image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b"
+}
+
 ];
 
-const seedDatabase = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/eventora');
-        console.log('\n✅ MongoDB connection open...');
 
-        await User.deleteMany();
-        await Event.deleteMany();
-        await Booking.deleteMany();
-        console.log('🗑️  Cleared existing data.');
 
-        // Hash user passwords
-        const salt = await bcrypt.genSalt(10);
-        const hashedUsers = users.map(u => ({
-            ...u,
-            password: bcrypt.hashSync(u.password, salt),
-            isVerified: true
-        }));
 
-        const createdUsers = await User.insertMany(hashedUsers);
-        const adminUser = createdUsers.find(u => u.role === 'admin');
-        const normalUsers = createdUsers.filter(u => u.role === 'user');
-        console.log(`👤 Created ${createdUsers.length} total dummy users.`);
 
-        // Link events to admin
-        const eventsWithAdmin = events.map(e => ({
-            ...e,
-            availableSeats: e.totalSeats,
-            createdBy: adminUser._id
-        }));
+async function seedDatabase(){
 
-        const createdEvents = await Event.insertMany(eventsWithAdmin);
-        console.log(`🎉 Created ${createdEvents.length} distinct events with Unsplash images.`);
+try{
 
-        // Generate Bookings Data
-        const bookingsData = [];
 
-        for (const event of createdEvents) {
-            // Assign 3-6 random users to each event
-            const randomCount = Math.floor(Math.random() * 4) + 3;
-            // Shuffle and pick random users
-            const shuffledUsers = [...normalUsers].sort(() => 0.5 - Math.random());
-            const selectedUsers = shuffledUsers.slice(0, randomCount);
+await mongoose.connect(process.env.MONGO_URI);
 
-            for (const user of selectedUsers) {
-                // Randomize statuses
-                const statuses = ['pending', 'confirmed', 'cancelled'];
-                const status = statuses[Math.floor(Math.random() * statuses.length)];
+console.log("MongoDB Connected");
 
-                let paymentStatus = 'not_paid';
-                if (status === 'confirmed' && event.ticketPrice > 0) {
-                    // Usually confirmed tickets are marked paid (90% of the time)
-                    paymentStatus = Math.random() > 0.1 ? 'paid' : 'not_paid';
-                } else if (event.ticketPrice === 0) {
-                    paymentStatus = 'paid';
-                }
 
-                bookingsData.push({
-                    userId: user._id,
-                    eventId: event._id,
-                    status: status,
-                    paymentStatus: paymentStatus,
-                    amount: event.ticketPrice
-                });
+await User.deleteMany({});
+await Event.deleteMany({});
+await Booking.deleteMany({});
 
-                // Deduct available seats specifically for confirmed tickets!
-                if (status === 'confirmed') {
-                    event.availableSeats -= 1;
-                    await event.save();
-                }
-            }
-        }
 
-        await Booking.insertMany(bookingsData);
-        console.log(`🎫 Inserted ${bookingsData.length} randomized dummy bookings (confirmed, pending, cancelled, paid, not_paid).`);
+console.log("Old data cleared");
 
-        console.log('\n🚀 Database seeded successfully!');
-        console.log('-------------------------------------------');
-        console.log('Admin Email: admin@eventora.com');
-        console.log('User Email:  user@eventora.com');
-        console.log('Password for all users: password123');
-        console.log('-------------------------------------------\n');
 
-        process.exit();
-    } catch (error) {
-        console.error('❌ Error seeding data:', error);
-        process.exit(1);
-    }
-};
+
+const salt = await bcrypt.genSalt(10);
+
+
+
+const createdUsers = await User.insertMany(
+
+users.map(user=>({
+
+...user,
+
+password:bcrypt.hashSync(
+user.password,
+salt
+),
+
+isVerified:true
+
+}))
+
+);
+
+
+
+const admin = createdUsers.find(
+u=>u.role==="admin"
+);
+
+
+
+const normalUser = createdUsers.find(
+u=>u.role==="user"
+);
+
+
+
+const createdEvents = await Event.insertMany(
+
+events.map(event=>({
+
+...event,
+
+availableSeats:event.totalSeats,
+
+createdBy:admin._id
+
+}))
+
+);
+
+
+
+console.log(
+`${createdEvents.length} Events Created`
+);
+
+
+
+const bookings = createdEvents.map(event=>({
+
+userId:normalUser._id,
+
+eventId:event._id,
+
+status:"confirmed",
+
+paymentStatus:"paid",
+
+amount:event.ticketPrice
+
+}));
+
+
+
+await Booking.insertMany(bookings);
+
+
+
+console.log("Bookings Created");
+
+console.log("DATABASE SEEDED SUCCESSFULLY 🚀");
+
+
+process.exit();
+
+
+
+}
+catch(error){
+
+console.log(error);
+
+process.exit(1);
+
+}
+
+}
+
+
 
 seedDatabase();

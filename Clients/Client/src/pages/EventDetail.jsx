@@ -8,20 +8,22 @@ import { AuthContext } from "../context/AuthContext";
 import {
     FaCalendarAlt,
     FaMapMarkerAlt,
-    FaChair,
     FaMoneyBillWave,
     FaTicketAlt,
     FaLock
 } from "react-icons/fa";
 
 
+
 const EventDetail = () => {
 
 
     const { id } = useParams();
+
     const navigate = useNavigate();
 
     const { user } = useContext(AuthContext);
+
 
 
     const [event,setEvent] = useState(null);
@@ -41,34 +43,47 @@ const EventDetail = () => {
 
 
 
+
     useEffect(()=>{
 
 
         const fetchEvent = async()=>{
 
+
             try{
+
 
                 const {data}=await api.get(
                     `/events/${id}`
                 );
 
+
                 setEvent(data);
 
+
             }
+
             catch(error){
+
 
                 setError(
                     "Failed to load event details"
                 );
 
+
             }
+
             finally{
+
 
                 setLoading(false);
 
+
             }
 
+
         };
+
 
 
         fetchEvent();
@@ -82,16 +97,180 @@ const EventDetail = () => {
 
 
 
-    const handleBooking = async()=>{
+    // ===============================
+    // RAZORPAY PAYMENT
+    // ===============================
+
+
+    const handlePayment = async()=>{
 
 
         if(!user){
+
 
             navigate("/login");
 
             return;
 
+
         }
+
+
+
+        try{
+
+
+            setBookingLoading(true);
+
+            setError("");
+
+
+
+            const {data}=await api.post(
+                "/payment/create-order",
+                {
+                    amount:event.ticketPrice
+                }
+            );
+
+
+
+
+
+            const options={
+
+
+
+                key:
+                import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+
+
+                amount:data.amount,
+
+
+                currency:data.currency,
+
+
+
+                name:"EventEra",
+
+
+
+                description:event.title,
+
+
+
+                order_id:data.id,
+
+
+
+                handler:function(response){
+
+
+
+                    console.log(
+                        "Payment Success",
+                        response
+                    );
+
+
+
+                    setSuccessMsg(
+                        "Payment successful! Verify OTP to complete booking."
+                    );
+
+
+
+                    setShowOTP(true);
+
+
+
+                },
+
+
+
+                prefill:{
+
+
+                    name:user.name,
+
+
+                    email:user.email
+
+
+                },
+
+
+
+                theme:{
+
+
+                    color:"#B39CD0"
+
+
+                }
+
+
+
+            };
+
+
+
+
+            const razorpay =
+            new window.Razorpay(options);
+
+
+
+            razorpay.open();
+
+
+
+        }
+
+
+        catch(error){
+
+
+            console.log(error);
+
+
+
+            setError(
+                "Payment failed"
+            );
+
+
+        }
+
+
+
+        finally{
+
+
+            setBookingLoading(false);
+
+
+        }
+
+
+    };
+
+
+
+
+
+
+
+
+
+    // ===============================
+    // OTP + BOOKING
+    // ===============================
+
+
+    const handleBooking = async()=>{
 
 
         try{
@@ -105,7 +284,9 @@ const EventDetail = () => {
 
 
 
+
             if(!showOTP){
+
 
 
                 await api.post(
@@ -113,7 +294,9 @@ const EventDetail = () => {
                 );
 
 
+
                 setShowOTP(true);
+
 
 
                 setSuccessMsg(
@@ -123,33 +306,42 @@ const EventDetail = () => {
 
             }
 
+
+
             else{
 
 
                 await api.post(
                     "/bookings",
                     {
+
                         eventId:event._id,
+
                         otp
+
                     }
                 );
 
 
 
                 setSuccessMsg(
-                    "Booking request submitted. Waiting for admin approval."
+                    "Booking request submitted successfully!"
                 );
 
 
-                setShowOTP(false);
 
                 setOtp("");
+
+                setShowOTP(false);
+
 
             }
 
 
 
         }
+
+
         catch(error){
 
 
@@ -160,6 +352,9 @@ const EventDetail = () => {
 
 
         }
+
+
+
         finally{
 
 
@@ -170,6 +365,7 @@ const EventDetail = () => {
 
 
     };
+
 
 
 
@@ -201,6 +397,7 @@ const EventDetail = () => {
 
 
 
+
     if(!event){
 
 
@@ -219,31 +416,19 @@ const EventDetail = () => {
 
         );
 
+
     }
-
-
-
 
 
 
     const percentage =
     (event.availableSeats / event.totalSeats) * 100;
-
-
-
-
-
-return (
-
-
+    return (
 
 <div className="
 min-h-screen
 pb-20
 ">
-
-
-
 
 
 <motion.div
@@ -271,10 +456,7 @@ mx-auto
 
 
 
-
-
 {/* IMAGE */}
-
 
 <div className="
 relative
@@ -312,10 +494,7 @@ from-black/80
 to-transparent
 ">
 
-
 </div>
-
-
 
 
 
@@ -328,7 +507,7 @@ text-white
 
 
 <span className="
-bg-yellow-400
+bg-purple-300
 text-black
 px-4
 py-2
@@ -357,12 +536,7 @@ mt-5
 </div>
 
 
-
 </div>
-
-
-
-
 
 
 
@@ -379,20 +553,18 @@ mt-10
 
 
 
-
 {/* DETAILS */}
-
 
 
 <div className="
 lg:col-span-2
 bg-white
-dark:bg-[#170025]
+dark:bg-[#2C2C2C]
 rounded-[35px]
 p-8
 shadow-xl
 border
-dark:border-purple-900
+dark:border-gray-700
 ">
 
 
@@ -400,7 +572,7 @@ dark:border-purple-900
 text-3xl
 font-black
 mb-5
-dark:text-white
+dark:text-[#E4E4E4]
 ">
 
 About Event
@@ -438,7 +610,7 @@ mt-10
 p-5
 rounded-3xl
 bg-gray-100
-dark:bg-[#220035]
+dark:bg-[#383838]
 flex
 gap-4
 items-center
@@ -447,10 +619,11 @@ items-center
 
 <FaCalendarAlt
 className="
-text-yellow-500
-dark:text-purple-400
+text-purple-400
 text-3xl
-"/>
+"
+/>
+
 
 
 <div>
@@ -470,8 +643,7 @@ font-bold
 dark:text-white
 ">
 
-{new Date(event.date)
-.toDateString()}
+{new Date(event.date).toDateString()}
 
 </h3>
 
@@ -486,13 +658,11 @@ dark:text-white
 
 
 
-
-
 <div className="
 p-5
 rounded-3xl
 bg-gray-100
-dark:bg-[#220035]
+dark:bg-[#383838]
 flex
 gap-4
 items-center
@@ -502,12 +672,12 @@ items-center
 <FaMapMarkerAlt
 
 className="
-text-yellow-500
-dark:text-purple-400
+text-purple-400
 text-3xl
 "
 
 />
+
 
 
 <div>
@@ -543,12 +713,7 @@ dark:text-white
 
 
 
-
-
-
 </div>
-
-
 
 
 
@@ -561,8 +726,8 @@ dark:text-white
 
 
 <div className="
-bg-black
-dark:bg-[#120021]
+bg-[#1F1F1F]
+dark:bg-[#333333]
 text-white
 rounded-[35px]
 p-8
@@ -582,10 +747,11 @@ mb-6
 
 <FaTicketAlt
 className="
-text-yellow-400
+text-[#A8DADC]
 text-3xl
 "
 />
+
 
 
 <h2 className="
@@ -606,9 +772,7 @@ Booking
 
 
 
-<div className="
-space-y-5
-">
+<div className="space-y-5">
 
 
 
@@ -621,9 +785,10 @@ gap-4
 
 <FaMoneyBillWave
 className="
-text-yellow-400
+text-[#A8DADC]
 "
 />
+
 
 
 <div>
@@ -664,6 +829,7 @@ event.ticketPrice===0
 
 <div>
 
+
 <div className="
 flex
 justify-between
@@ -672,9 +838,7 @@ mb-2
 
 
 <span>
-
 Seats
-
 </span>
 
 
@@ -686,6 +850,7 @@ Seats
 
 
 </div>
+
 
 
 
@@ -705,8 +870,7 @@ width:`${percentage}%`
 
 className="
 h-full
-bg-yellow-400
-dark:bg-purple-500
+bg-[#A8DADC]
 "
 
 />
@@ -730,7 +894,7 @@ dark:bg-purple-500
 
 
 {
-showOTP && (
+showOTP &&
 
 <div className="
 mt-6
@@ -756,9 +920,7 @@ OTP Verification
 
 value={otp}
 
-onChange={
-(e)=>setOtp(e.target.value)
-}
+onChange={(e)=>setOtp(e.target.value)}
 
 maxLength="6"
 
@@ -779,11 +941,11 @@ font-bold
 />
 
 
+
 </div>
 
-)
-
 }
+
 
 
 
@@ -793,13 +955,23 @@ font-bold
 
 <button
 
-onClick={handleBooking}
+
+onClick={
+showOTP
+?
+handleBooking
+:
+handlePayment
+}
+
+
 
 disabled={
 bookingLoading ||
 (showOTP && !otp) ||
 event.availableSeats<=0
 }
+
 
 
 className="
@@ -809,14 +981,16 @@ py-4
 rounded-xl
 font-black
 text-lg
-bg-yellow-400
+bg-[#B39CD0]
 text-black
 hover:scale-105
 transition
 disabled:bg-gray-500
 "
 
+
 >
+
 
 
 {
@@ -845,12 +1019,14 @@ event.availableSeats<=0
 
 :
 
-"Book Now"
+"Pay & Book"
 
 }
 
 
+
 </button>
+
 
 
 
@@ -879,6 +1055,7 @@ text-center
 
 
 
+
 {
 successMsg &&
 
@@ -901,18 +1078,11 @@ text-center
 
 
 
-
 </div>
 
 
 
-
-
-
-
 </div>
-
-
 
 
 
@@ -920,9 +1090,7 @@ text-center
 
 
 
-
 </div>
-
 
 
 );
