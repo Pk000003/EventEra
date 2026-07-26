@@ -159,20 +159,45 @@ const options = {
     },
 
 
-    handler:function(response){
+    handler: async function(response){
 
-        console.log(
-            "Payment Success",
-            response
+    try{
+
+        const verify = await api.post(
+            "/payment/verify-payment",
+            {
+                razorpay_order_id: response.razorpay_order_id,
+
+                razorpay_payment_id: response.razorpay_payment_id,
+
+                razorpay_signature: response.razorpay_signature
+            }
         );
 
-        setSuccessMsg(
-            "Payment successful! Verify OTP to complete booking."
+
+        if(verify.data.success){
+
+            setSuccessMsg(
+                "Payment successful! Verify OTP to complete booking."
+            );
+
+            setShowOTP(true);
+
+        }
+
+
+    }
+    catch(error){
+
+        console.log(error);
+
+        setError(
+            "Payment verification failed"
         );
 
-        setShowOTP(true);
+    }
 
-    },
+},
 
 
     prefill:{
