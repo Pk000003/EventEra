@@ -295,13 +295,27 @@ const handleBooking = async()=>{
 
 
 
-                await api.post(
-                    "/bookings/send-otp"
-                );
+               if(verify.data.success){
+
+    console.log("SENDING OTP NOW");
 
 
+    await api.post(
+        "/bookings/send-otp"
+    );
 
-                setShowOTP(true);
+
+    console.log("OTP API COMPLETED");
+
+
+    setSuccessMsg(
+        "Payment successful! OTP sent to your email."
+    );
+
+
+    setShowOTP(true);
+
+}
 
 
 
