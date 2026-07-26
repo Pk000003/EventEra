@@ -136,87 +136,59 @@ const EventDetail = () => {
 
 
 
+const options = {
 
-            const options={
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
 
+    amount: data.amount,
 
+    currency: data.currency,
 
-                key:
-                import.meta.env.VITE_RAZORPAY_KEY_ID,
+    name:"EventEra",
 
+    description:event.title,
 
-
-                amount:data.amount,
-
-
-                currency:data.currency,
-
+    order_id:data.id,
 
 
-                name:"EventEra",
+    method: {
+        upi: true,
+        card: true,
+        netbanking: true,
+        wallet: true
+    },
 
 
+    handler:function(response){
 
-                description:event.title,
+        console.log(
+            "Payment Success",
+            response
+        );
 
+        setSuccessMsg(
+            "Payment successful! Verify OTP to complete booking."
+        );
 
+        setShowOTP(true);
 
-                order_id:data.id,
-
-
-
-                handler:function(response){
-
-
-
-                    console.log(
-                        "Payment Success",
-                        response
-                    );
+    },
 
 
-
-                    setSuccessMsg(
-                        "Payment successful! Verify OTP to complete booking."
-                    );
-
-
-
-                    setShowOTP(true);
+    prefill:{
+        name:user.name,
+        email:user.email
+    },
 
 
+    theme:{
+        color:"#B39CD0"
+    }
 
-                },
-
-
-
-                prefill:{
-
-
-                    name:user.name,
+};
 
 
-                    email:user.email
-
-
-                },
-
-
-
-                theme:{
-
-
-                    color:"#B39CD0"
-
-
-                }
-
-
-
-            };
-
-
-console.log("RAZORPAY KEY:", import.meta.env.VITE_RAZORPAY_KEY_ID);
+console.log("ENV OBJECT:", import.meta.env);
 
             const razorpay =
             new window.Razorpay(options);
