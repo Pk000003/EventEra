@@ -159,7 +159,7 @@ const options = {
     },
 
 
-    handler: async function(response){
+handler: async function(response){
 
     try{
 
@@ -177,11 +177,19 @@ const options = {
 
         if(verify.data.success){
 
-            setSuccessMsg(
-                "Payment successful! Verify OTP to complete booking."
+
+            await api.post(
+                "/bookings/send-otp"
             );
 
+
+            setSuccessMsg(
+                "Payment successful! OTP sent to your email."
+            );
+
+
             setShowOTP(true);
+
 
         }
 
@@ -266,8 +274,9 @@ console.log("ENV OBJECT:", import.meta.env);
     // OTP + BOOKING
     // ===============================
 
+const handleBooking = async()=>{
 
-    const handleBooking = async()=>{
+    console.log("VERIFY OTP CLICKED");
 
 
         try{
