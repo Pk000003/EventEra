@@ -5,6 +5,7 @@ require('dns').setDefaultResultOrder('ipv4first');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const chatRoutes = require("./routes/chatRoutes");
 
 const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/events');
@@ -25,6 +26,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use("/api/chat", chatRoutes);
 
 
 
